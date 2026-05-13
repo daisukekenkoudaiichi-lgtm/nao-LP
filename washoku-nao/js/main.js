@@ -1046,3 +1046,105 @@ input:where([type='button'], [type='reset'], [type='submit']),
     try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
     applyLang(saved === 'en' || saved === 'zh' || saved === 'ja' ? saved : 'ja');
   })();
+
+  // reservation modal (UI mock — no submit)
+  (function () {
+    var modal = document.getElementById('reserveModal');
+    if (!modal) return;
+
+    var backdrop = document.getElementById('reserveModalBackdrop');
+    var btnClose = document.getElementById('reserveModalClose');
+    var openBtn = document.getElementById('reserve-cta');
+    var submitBtn = document.getElementById('reserveSubmit');
+    var panes = modal.querySelectorAll('.reserve-step-pane');
+    var dot1 = document.getElementById('reserveStepDot1');
+    var dot2 = document.getElementById('reserveStepDot2');
+    var dot3 = document.getElementById('reserveStepDot3');
+    var dots = [dot1, dot2, dot3];
+    var step = 1;
+    var closeTimer = null;
+
+    function setStep(n) {
+      step = n < 1 ? 1 : n > 3 ? 3 : n;
+      panes.forEach(function (p) {
+        var s = parseInt(p.getAttribute('data-reserve-step'), 10);
+        p.classList.toggle('is-active', s === step);
+      });
+      dots.forEach(function (d, i) {
+        if (!d) return;
+        if (i + 1 === step) {
+          d.classList.add('text-gold');
+          d.classList.remove('text-mute');
+        } else {
+          d.classList.remove('text-gold');
+          d.classList.add('text-mute');
+        }
+      });
+    }
+
+    function openModal() {
+      if (closeTimer) {
+        clearTimeout(closeTimer);
+        closeTimer = null;
+      }
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setStep(1);
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          modal.classList.add('is-open');
+        });
+      });
+      var first = modal.querySelector('#reserveDate');
+      if (first) setTimeout(function () { first.focus(); }, 450);
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (closeTimer) clearTimeout(closeTimer);
+      closeTimer = setTimeout(function () {
+        modal.classList.add('hidden');
+        closeTimer = null;
+      }, 450);
+    }
+
+    if (openBtn) {
+      openBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal();
+      });
+    }
+
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+
+    if (backdrop) {
+      backdrop.addEventListener('click', closeModal);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+
+    modal.querySelectorAll('[data-reserve-next]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setStep(step + 1);
+      });
+    });
+
+    modal.querySelectorAll('[data-reserve-back]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setStep(step - 1);
+      });
+    });
+
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function () {
+        window.alert('準備中');
+      });
+    }
+  })();

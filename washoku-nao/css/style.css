@@ -253,7 +253,7 @@
 
   /* responsive type */
   .display-xxl { font-size: clamp(2.6rem, 6vw, 5.2rem); }
-  .display-xl  { font-size: clamp(2rem, 4.6vw, 3.8rem); }
+  .display-xl  { font-size: clamp(1.6rem, 4.6vw, 3.8rem); }
   .display-lg  { font-size: clamp(1.6rem, 3vw, 2.4rem); }
 
   /* nav hover */
@@ -302,3 +302,84 @@
 
   /* table-like info rows */
   .info-row { border-bottom: 1px solid rgba(138,115,64,.25); }
+
+  /* —— reservation modal (mock) —— */
+  #reserveModal { color-scheme: dark; }
+  .reserve-modal-backdrop {
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(.2,.7,.2,1);
+  }
+  .reserve-modal-panel {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.45s cubic-bezier(.2,.7,.2,1), transform 0.45s cubic-bezier(.2,.7,.2,1);
+  }
+  #reserveModal.is-open .reserve-modal-backdrop { opacity: 1; }
+  #reserveModal.is-open .reserve-modal-panel { opacity: 1; transform: none; }
+
+  .reserve-steps-wrap { position: relative; min-height: 360px; }
+  @media (min-width: 768px) {
+    .reserve-steps-wrap { min-height: 420px; }
+  }
+  .reserve-step-pane {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(14px);
+    transition: opacity 0.38s cubic-bezier(.2,.7,.2,1), transform 0.38s cubic-bezier(.2,.7,.2,1), visibility 0.38s;
+    pointer-events: none;
+  }
+  .reserve-step-pane.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .reserve-field { border-radius: 2px; }
+  .reserve-field:focus { outline: none; }
+
+  .reserve-radio-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .reserve-course-option:has(.reserve-radio-input:focus-visible) {
+    outline: 1px solid rgba(201,168,106,0.65);
+    outline-offset: 2px;
+  }
+  .reserve-course-option:has(.reserve-radio-input:checked) {
+    border-color: rgba(201,168,106,0.55);
+    background: rgba(24,20,18,0.98);
+    box-shadow: inset 0 0 0 1px rgba(201,168,106,0.22);
+  }
+  .reserve-course-ring {
+    position: relative;
+    align-self: flex-start;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  .reserve-course-option:has(.reserve-radio-input:checked) .reserve-course-ring {
+    border-color: #c9a86a;
+    background: rgba(201,168,106,0.12);
+  }
+  .reserve-course-option:has(.reserve-radio-input:checked) .reserve-course-ring::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    background: linear-gradient(180deg,#efdba8 0%, #c9a86a 100%);
+    box-shadow: 0 0 0 1px rgba(26,19,16,0.35);
+  }
