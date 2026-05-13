@@ -120,6 +120,19 @@
     object-position: center;
   }
 
+  /* hero height: desktop stable viewport; phone uses dvh + lvh for maximum usable canvas */
+  #hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+  @media (max-width: 639px) {
+    #hero {
+      min-height: 100dvh;
+      min-height: 100lvh;
+    }
+  }
+
   /* gold button */
   .btn-gold {
     position: relative;
