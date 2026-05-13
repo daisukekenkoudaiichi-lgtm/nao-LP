@@ -31,6 +31,17 @@
     color:transparent;
     text-shadow: 0 0 0.01em rgba(214,179,108,.05);
   }
+
+  /* 「直」店名一文字 — キャッチ内でやや大きく強調 */
+  .nao-emphasis {
+    display: inline-block;
+    font-size: 1.42em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 0.95;
+    vertical-align: -0.08em;
+    filter: drop-shadow(0 0 14px rgba(230, 207, 153, 0.45)) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
+  }
   .gold-line {
     background: linear-gradient(90deg, transparent 0%, #8a7340 15%, #d2b074 50%, #8a7340 85%, transparent 100%);
   }
@@ -249,6 +260,34 @@
   .nav-link { position: relative; }
   .nav-link::after { content:''; position:absolute; left:50%; right:50%; bottom:-6px; height:1px; background:#c9a86a; transition: left .4s ease, right .4s ease; }
   .nav-link:hover::after { left:0; right:0; }
+
+  /* header language switch (JP / EN / 中文) */
+  .lang-switch { border-left: 1px solid rgba(201,168,106,.2); padding-left: 0.75rem; margin-left: 0.25rem; }
+  @media (min-width: 1024px) {
+    .lang-switch { padding-left: 1rem; margin-left: 0.35rem; }
+  }
+  .lang-btn {
+    min-width: 2rem;
+    padding: 0.32rem 0.45rem;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    color: rgba(244,236,224,0.55);
+    border: 1px solid rgba(201,168,106,0.28);
+    background: transparent;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: color .25s ease, border-color .25s ease, background .25s ease;
+  }
+  .lang-btn.lang-btn-zh { min-width: 2.35rem; letter-spacing: 0.08em; font-family: 'Shippori Mincho B1', serif; }
+  .lang-btn:hover { color: rgba(230,207,153,0.95); border-color: rgba(201,168,106,0.55); }
+  .lang-btn[aria-pressed="true"] {
+    color: #1a1310;
+    background: linear-gradient(180deg,#efdba8 0%, #d2b074 55%, #b58f4e 100%);
+    border-color: #8a7340;
+    box-shadow: 0 1px 0 rgba(255,235,190,0.45) inset;
+  }
 
   /* simple shimmer for hero scroll cue */
   .shimmer {

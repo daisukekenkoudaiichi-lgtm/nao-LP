@@ -930,3 +930,119 @@ input:where([type='button'], [type='reset'], [type='submit']),
       window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });
     });
   });
+
+  // i18n: nav / mobile menu / footer sitemap (JP · EN · 中文)
+  (function () {
+    var STORAGE_KEY = 'washokuNaoLang';
+    var I18N = {
+      ja: {
+        nav_concept_primary: '店主の想い',
+        nav_concept_sub: 'Vision',
+        nav_concept_m: '店主の想い　Vision',
+        nav_ingredients_primary: '食材',
+        nav_ingredients_sub: 'Ingredients',
+        nav_ingredients_m: '食材　Ingredients',
+        nav_menu_primary: 'メニュー',
+        nav_menu_sub: 'Menu',
+        nav_menu_m: 'メニュー　Menu',
+        nav_shop_primary: '店舗',
+        nav_shop_sub: 'Shop',
+        nav_shop_m: '店舗　Shop',
+        nav_voice_primary: '顧客の声',
+        nav_voice_sub: 'Reviews',
+        nav_voice_m: '顧客の声　Reviews',
+        nav_access_primary: '案内',
+        nav_access_sub: 'Access',
+        nav_access_m: '案内　Access',
+        nav_reserve_m: 'ご予約　Reservation',
+        footer_concept: '店主の想い',
+        footer_ingredients: '食材',
+        footer_menu: 'メニュー',
+        footer_shop: '店舗',
+        footer_voice: '顧客の声',
+        footer_access: '案内',
+        footer_reserve: 'ご予約'
+      },
+      en: {
+        nav_concept_primary: "Chef's vision",
+        nav_concept_sub: 'Philosophy',
+        nav_concept_m: "Chef's vision　Philosophy",
+        nav_ingredients_primary: 'Ingredients',
+        nav_ingredients_sub: 'Sourcing',
+        nav_ingredients_m: 'Ingredients　Sourcing',
+        nav_menu_primary: 'Menu',
+        nav_menu_sub: 'Courses',
+        nav_menu_m: 'Menu　Courses',
+        nav_shop_primary: 'Restaurant',
+        nav_shop_sub: 'Interior',
+        nav_shop_m: 'Restaurant　Interior',
+        nav_voice_primary: 'Guest voices',
+        nav_voice_sub: 'Reviews',
+        nav_voice_m: 'Guest voices　Reviews',
+        nav_access_primary: 'Access',
+        nav_access_sub: 'Location',
+        nav_access_m: 'Access　Location',
+        nav_reserve_m: 'Reservation',
+        footer_concept: "Chef's vision",
+        footer_ingredients: 'Ingredients',
+        footer_menu: 'Menu',
+        footer_shop: 'Restaurant',
+        footer_voice: 'Reviews',
+        footer_access: 'Access',
+        footer_reserve: 'Reservations'
+      },
+      zh: {
+        nav_concept_primary: '店主理念',
+        nav_concept_sub: 'Vision',
+        nav_concept_m: '店主理念　Vision',
+        nav_ingredients_primary: '食材',
+        nav_ingredients_sub: '产地',
+        nav_ingredients_m: '食材　产地',
+        nav_menu_primary: '菜单',
+        nav_menu_sub: 'Menu',
+        nav_menu_m: '菜单　Menu',
+        nav_shop_primary: '店铺',
+        nav_shop_sub: '环境',
+        nav_shop_m: '店铺　环境',
+        nav_voice_primary: '顾客评价',
+        nav_voice_sub: 'Reviews',
+        nav_voice_m: '顾客评价　Reviews',
+        nav_access_primary: '交通',
+        nav_access_sub: 'Access',
+        nav_access_m: '交通　Access',
+        nav_reserve_m: '预订　Reservation',
+        footer_concept: '店主理念',
+        footer_ingredients: '食材',
+        footer_menu: '菜单',
+        footer_shop: '店铺',
+        footer_voice: '顾客评价',
+        footer_access: '交通',
+        footer_reserve: '预订'
+      }
+    };
+
+    function applyLang(lang) {
+      if (!I18N[lang]) lang = 'ja';
+      var pack = I18N[lang];
+      document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : lang;
+      document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var key = el.getAttribute('data-i18n');
+        if (key && pack[key] != null) el.textContent = pack[key];
+      });
+      document.querySelectorAll('.lang-btn').forEach(function (btn) {
+        var on = btn.getAttribute('data-lang') === lang;
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        applyLang(btn.getAttribute('data-lang') || 'ja');
+      });
+    });
+
+    var saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    applyLang(saved === 'en' || saved === 'zh' || saved === 'ja' ? saved : 'ja');
+  })();

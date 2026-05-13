@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head>
+<html lang="ja" data-default-lang="ja"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>和食 直 NAO ｜ 道東の全てを堪能する ｜ 釧路 完全予約制</title>
@@ -32,30 +32,37 @@
       <span class="font-ja text-2xl tracking-wider">和食 <span class="text-gold">直</span></span>
       <span class="hidden sm:block font-cin text-[10px] tracking-widest2 text-mute">NAO</span>
     </a>
-    <nav class="nav-links hidden lg:flex items-center gap-9 text-[13px] tracking-wider2 text-cream/85">
-      <a class="nav-link" href="#concept">概念<span class="ml-1 text-mute font-cin text-[10px]">Concept</span></a>
-      <a class="nav-link" href="#ingredients">食材<span class="ml-1 text-mute font-cin text-[10px]">Ingredients</span></a>
-      <a class="nav-link" href="#course">献立<span class="ml-1 text-mute font-cin text-[10px]">Course</span></a>
-      <a class="nav-link" href="#space">空間<span class="ml-1 text-mute font-cin text-[10px]">Space</span></a>
-      <a class="nav-link" href="#voice">体験<span class="ml-1 text-mute font-cin text-[10px]">Voice</span></a>
-      <a class="nav-link" href="#access">案内<span class="ml-1 text-mute font-cin text-[10px]">Access</span></a>
+    <div class="flex items-center gap-4 lg:gap-8">
+    <nav class="nav-links hidden lg:flex items-center gap-9 text-[13px] tracking-wider2 text-cream/85" aria-label="Primary">
+      <a class="nav-link" href="#concept"><span data-i18n="nav_concept_primary">店主の想い</span><span class="ml-1 text-mute font-cin text-[10px]" data-i18n="nav_concept_sub">Vision</span></a>
+      <a class="nav-link" href="#ingredients"><span data-i18n="nav_ingredients_primary">食材</span><span class="ml-1 text-mute font-cin text-[10px]" data-i18n="nav_ingredients_sub">Ingredients</span></a>
+      <a class="nav-link" href="#course"><span data-i18n="nav_menu_primary">メニュー</span><span class="ml-1 text-mute font-cin text-[10px]" data-i18n="nav_menu_sub">Menu</span></a>
+      <a class="nav-link" href="#space"><span data-i18n="nav_shop_primary">店舗</span><span class="ml-1 text-mute font-cin text-[10px]" data-i18n="nav_shop_sub">Shop</span></a>
+      <a class="nav-link" href="#voice"><span data-i18n="nav_voice_primary">顧客の声</span><span class="ml-1 text-mute font-cin text-[10px]" data-i18n="nav_voice_sub">Reviews</span></a>
+      <a class="nav-link" href="#access"><span data-i18n="nav_access_primary">案内</span><span class="ml-1 text-mute font-cin text-[10px]" data-i18n="nav_access_sub">Access</span></a>
     </nav>
+    <div class="lang-switch flex items-center gap-1 shrink-0" role="group" aria-label="Language">
+      <button type="button" class="lang-btn" data-lang="ja" aria-pressed="true">JP</button>
+      <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" class="lang-btn lang-btn-zh" data-lang="zh" aria-pressed="false" title="中文">中文</button>
+    </div>
     <!-- Minimal trigger over hero -->
     <button id="menuBtn" class="nav-trigger flex items-center gap-3 text-gold/90 p-2" aria-label="menu">
       <span class="hidden sm:inline font-cin text-[11px] tracking-widest2">MENU</span>
       <svg width="22" height="14" viewBox="0 0 22 14"><path d="M0 3h22M0 11h14" stroke="currentColor" stroke-width="1.2"></path></svg>
     </button>
+    </div>
   </div>
   <!-- mobile menu -->
   <div id="mobileMenu" class="lg:hidden hidden border-t border-gold/15 bg-ink/95 backdrop-blur">
-    <nav class="flex flex-col px-8 py-6 gap-4 text-[15px] tracking-wider">
-      <a href="#concept">概念　Concept</a>
-      <a href="#ingredients">食材　Ingredients</a>
-      <a href="#course">献立　Course</a>
-      <a href="#space">空間　Space</a>
-      <a href="#voice">体験　Voice</a>
-      <a href="#access">案内　Access</a>
-      <a href="#reserve" class="text-gold">ご予約　Reservation</a>
+    <nav class="flex flex-col px-8 py-6 gap-4 text-[15px] tracking-wider" aria-label="Mobile">
+      <a href="#concept" data-i18n="nav_concept_m">店主の想い　Vision</a>
+      <a href="#ingredients" data-i18n="nav_ingredients_m">食材　Ingredients</a>
+      <a href="#course" data-i18n="nav_menu_m">メニュー　Menu</a>
+      <a href="#space" data-i18n="nav_shop_m">店舗　Shop</a>
+      <a href="#voice" data-i18n="nav_voice_m">顧客の声　Reviews</a>
+      <a href="#access" data-i18n="nav_access_m">案内　Access</a>
+      <a href="#reserve" class="text-gold" data-i18n="nav_reserve_m">ご予約　Reservation</a>
     </nav>
   </div>
 </header>
@@ -63,14 +70,14 @@
 <main id="top">
 
   <!-- HERO ============================================ -->
-  <section class="relative w-full bg-ink overflow-hidden" id="hero">
-    <!-- Hero composition (provided image, used as-is) -->
-    <div class="relative w-full">
-      <img src="assets/images/1c570a32-4d1c-49a2-9bf0-fcdea9507997.jpg" alt="和食 直 — 道東の全てを堪能する" class="w-full h-auto block select-none" draggable="false">
+  <section class="relative w-full bg-ink overflow-hidden" id="hero" style="height:100svh;height:100dvh;min-height:600px">
+    <!-- Hero composition fills full viewport -->
+    <div class="absolute inset-0">
+      <img src="assets/images/1c570a32-4d1c-49a2-9bf0-fcdea9507997.jpg" alt="和食 直 — 道東の全てを堪能する" class="w-full h-full object-cover object-[center_top] select-none" draggable="false">
       <!-- subtle top vignette so nav reads -->
       <div class="absolute inset-x-0 top-0 h-32 vignette-top pointer-events-none"></div>
       <!-- bottom blend into next section -->
-      <div class="absolute inset-x-0 bottom-0 h-24 vignette-bottom pointer-events-none"></div>
+      <div class="absolute inset-x-0 bottom-0 h-32 vignette-bottom pointer-events-none"></div>
     </div>
 
     <!-- Scroll cue -->
@@ -81,15 +88,15 @@
   </section>
 
   <!-- CONCEPT ========================================== -->
-  <section id="concept" class="relative bg-ink py-28 md:py-40 noise">
+  <section id="concept" class="relative bg-ink py-16 md:py-28 lg:py-40 noise">
     <div class="max-w-5xl mx-auto px-6 md:px-10 text-center">
       <div class="reveal flex flex-col items-center gap-4">
         <div class="eyebrow">— CONCEPT —</div>
         <div class="eyebrow-ja font-ja">店主の想い</div>
       </div>
 
-      <h2 class="reveal reveal-slow display-xl gold-foil font-ja mt-10 leading-[1.6]">
-        ただ、素材と<br class="md:hidden"><span class="text-gold">直</span>に向き合う。
+      <h2 class="reveal reveal-slow display-xl gold-foil font-ja mt-10 leading-[1.6] whitespace-nowrap">
+        ただ、素材と真っ<span class="nao-emphasis gold-foil">直</span>ぐに向き合う。
       </h2>
 
       <div class="reveal mt-12 max-w-2xl mx-auto text-cream/85 text-[15px] md:text-[16px] leading-[2.2] tracking-wider font-ja">
@@ -232,11 +239,11 @@
         <!-- COURSE 1 -->
         <article class="relative bg-ink2 border border-gold/15 p-8 md:p-10 flex flex-col">
           <div class="flex items-center justify-between">
-            <div class="num-circle text-gold/80 text-[12px] tracking-widest2">Ⅰ · KOU</div>
-            <div class="text-mute text-[10px] tracking-widest2 font-cin">8 COURSES</div>
+            <div class="num-circle text-gold/80 text-[12px] tracking-widest2">Ⅰ · HALF</div>
+            <div class="text-mute text-[10px] tracking-widest2 font-cin">SPECIAL COURSE</div>
           </div>
-          <h3 class="font-ja text-3xl mt-6 gold-foil">香 — kou</h3>
-          <div class="mt-3 text-cream/70 text-[12px] tracking-widest2 font-cin">SEASONAL · 8 COURSES</div>
+          <h3 class="font-ja text-3xl mt-6 gold-foil">特別ハーフコース</h3>
+          <div class="mt-3 text-cream/70 text-[12px] tracking-widest2 font-cin">SPECIAL HALF COURSE</div>
           <div class="hairline h-px w-12 mt-6"></div>
           <ul class="mt-6 text-cream/80 text-[13px] leading-[2] tracking-wider space-y-1">
             <li>— 先付</li>
@@ -246,9 +253,9 @@
             <li>— 凌ぎ・煮物</li>
             <li>— 食事・甘味</li>
           </ul>
-          <div class="mt-8 flex items-baseline justify-between border-t border-gold/15 pt-5">
+          <div class="mt-auto flex items-baseline justify-between border-t border-gold/15 pt-5">
             <div class="text-gold/90 text-[11px] tracking-widest2 font-cin">FROM</div>
-            <div class="font-ja text-2xl">¥ 12,000<span class="text-[12px] text-mute ml-1">／ 税込</span></div>
+            <div class="font-ja text-2xl">¥ 6,500<span class="text-[12px] text-mute ml-1">／ 税込</span></div>
           </div>
         </article>
 
@@ -256,11 +263,11 @@
         <article class="relative bg-gradient-to-b from-[#1a1410] to-ink2 border border-gold/40 p-8 md:p-10 flex flex-col md:-translate-y-4">
           <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-ink border border-gold/50 text-gold text-[10px] tracking-widest2 font-cin">— SIGNATURE —</div>
           <div class="flex items-center justify-between">
-            <div class="num-circle text-gold text-[12px] tracking-widest2">Ⅱ · NAO</div>
-            <div class="text-mute text-[10px] tracking-widest2 font-cin">10 COURSES</div>
+            <div class="num-circle text-gold text-[12px] tracking-widest2">Ⅱ · OMAKASE</div>
+            <div class="text-mute text-[10px] tracking-widest2 font-cin">CHEF'S OMAKASE</div>
           </div>
-          <h3 class="font-ja text-3xl mt-6 gold-foil">直 — nao</h3>
-          <div class="mt-3 text-cream/70 text-[12px] tracking-widest2 font-cin">CHEF'S OMAKASE · 10 COURSES</div>
+          <h3 class="font-ja text-2xl mt-6 gold-foil whitespace-nowrap">店主のおまかせコース</h3>
+          <div class="mt-3 text-cream/70 text-[12px] tracking-widest2 font-cin">CHEF'S OMAKASE COURSE</div>
           <div class="hairline h-px w-12 mt-6"></div>
           <ul class="mt-6 text-cream/85 text-[13px] leading-[2] tracking-wider space-y-1">
             <li>— 先付・八寸</li>
@@ -271,20 +278,20 @@
             <li>— 揚物・凌ぎ・食事</li>
             <li>— 甘味・お薄</li>
           </ul>
-          <div class="mt-8 flex items-baseline justify-between border-t border-gold/30 pt-5">
+          <div class="mt-auto flex items-baseline justify-between border-t border-gold/30 pt-5">
             <div class="text-gold text-[11px] tracking-widest2 font-cin">FROM</div>
-            <div class="font-ja text-2xl">¥ 18,000<span class="text-[12px] text-mute ml-1">／ 税込</span></div>
+            <div class="font-ja text-2xl">¥ 10,000<span class="text-[12px] text-mute ml-1">／ 税込</span></div>
           </div>
         </article>
 
         <!-- COURSE 3 -->
         <article class="relative bg-ink2 border border-gold/15 p-8 md:p-10 flex flex-col">
           <div class="flex items-center justify-between">
-            <div class="num-circle text-gold/80 text-[12px] tracking-widest2">Ⅲ · KIWAMI</div>
-            <div class="text-mute text-[10px] tracking-widest2 font-cin">12 COURSES</div>
+            <div class="num-circle text-gold/80 text-[12px] tracking-widest2">Ⅲ · SELECTION</div>
+            <div class="text-mute text-[10px] tracking-widest2 font-cin">CHEF'S SELECTION</div>
           </div>
-          <h3 class="font-ja text-3xl mt-6 gold-foil">極 — kiwami</h3>
-          <div class="mt-3 text-cream/70 text-[12px] tracking-widest2 font-cin">FULL COURSE · 12 COURSES</div>
+          <h3 class="font-ja text-3xl mt-6 gold-foil">店主の厳選コース</h3>
+          <div class="mt-3 text-cream/70 text-[12px] tracking-widest2 font-cin">CHEF'S SELECTION COURSE</div>
           <div class="hairline h-px w-12 mt-6"></div>
           <ul class="mt-6 text-cream/80 text-[13px] leading-[2] tracking-wider space-y-1">
             <li>— 茶懐石仕立て</li>
@@ -293,9 +300,9 @@
             <li>— 利き酒三種付き</li>
             <li>— 個室限定／二日前予約</li>
           </ul>
-          <div class="mt-8 flex items-baseline justify-between border-t border-gold/15 pt-5">
+          <div class="mt-auto flex items-baseline justify-between border-t border-gold/15 pt-5">
             <div class="text-gold/90 text-[11px] tracking-widest2 font-cin">FROM</div>
-            <div class="font-ja text-2xl">¥ 28,000<span class="text-[12px] text-mute ml-1">／ 税込</span></div>
+            <div class="font-ja text-2xl">¥ 12,000<span class="text-[12px] text-mute ml-1">／ 税込</span></div>
           </div>
         </article>
       </div>
@@ -543,85 +550,167 @@
   <!-- RESERVE ========================================== -->
   <section id="reserve" class="relative bg-ink py-24 md:py-36 overflow-hidden noise">
     <div class="max-w-[1280px] mx-auto px-6 md:px-10">
-      <!-- top features strip -->
-      <div class="reveal grid grid-cols-3 md:grid-cols-6 gap-px bg-gold/15 border border-gold/20 mb-16 md:mb-20">
-        <!-- feat 1 -->
-        <div class="bg-ink2 px-3 py-6 md:py-8 flex flex-col items-center text-center gap-3">
-          <svg width="34" height="34" viewBox="0 0 34 34" class="text-gold"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="17" cy="17" r="6"></circle><path d="M17 5v3M17 26v3M5 17h3M26 17h3M8.5 8.5l2.1 2.1M23.4 23.4l2.1 2.1M8.5 25.5l2.1-2.1M23.4 10.6l2.1-2.1"></path></g></svg>
-          <div class="font-ja text-[13px] tracking-widest2">完全予約制</div>
-          <div class="text-mute text-[10px] leading-relaxed">一日数組様限定で<br>お迎えしております</div>
-        </div>
-        <div class="bg-ink2 px-3 py-6 md:py-8 flex flex-col items-center text-center gap-3">
-          <svg width="34" height="34" viewBox="0 0 34 34" class="text-gold"><g fill="none" stroke="currentColor" stroke-width="1"><path d="M5 23h24M7 23v-5M14 23v-5M20 23v-5M27 23v-5M5 18h24M5 18l3-4h18l3 4"></path></g></svg>
-          <div class="font-ja text-[13px] tracking-widest2">カウンター席</div>
-          <div class="text-mute text-[10px] leading-relaxed">職人の技を間近で<br>ご覧いただけます</div>
-        </div>
-        <div class="bg-ink2 px-3 py-6 md:py-8 flex flex-col items-center text-center gap-3">
-          <svg width="34" height="34" viewBox="0 0 34 34" class="text-gold"><g fill="none" stroke="currentColor" stroke-width="1"><rect x="6" y="6" width="22" height="22"></rect><line x1="17" y1="6" x2="17" y2="28"></line><line x1="6" y1="17" x2="28" y2="17"></line></g></svg>
-          <div class="font-ja text-[13px] tracking-widest2">個室完備</div>
-          <div class="text-mute text-[10px] leading-relaxed">大切な方とのお食事や<br>接待に最適です</div>
-        </div>
-        <div class="bg-ink2 px-3 py-6 md:py-8 flex flex-col items-center text-center gap-3">
-          <svg width="34" height="34" viewBox="0 0 34 34" class="text-gold"><g fill="none" stroke="currentColor" stroke-width="1"><path d="M17 6c-4 4-6 9-3 13s9 3 12-1"></path><path d="M14 11l3 3M11 16l3 3M9 22c2 1 4 1 6 0"></path></g></svg>
-          <div class="font-ja text-[13px] tracking-widest2">季節のコース</div>
-          <div class="text-mute text-[10px] leading-relaxed">道東の旬を活かした<br>おまかせコースをご用意</div>
-        </div>
-        <div class="bg-ink2 px-3 py-6 md:py-8 flex flex-col items-center text-center gap-3">
-          <svg width="34" height="34" viewBox="0 0 34 34" class="text-gold"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="17" cy="17" r="11"></circle><path d="M6 17h22M17 6c4 3 4 19 0 22M17 6c-4 3-4 19 0 22"></path></g></svg>
-          <div class="font-ja text-[13px] tracking-widest2">英語対応可</div>
-          <div class="text-mute text-[10px] leading-relaxed">海外のお客様も<br>安心してご利用いただけます</div>
-        </div>
-        <div class="bg-ink2 px-3 py-6 md:py-8 flex flex-col items-center text-center gap-3">
-          <svg width="34" height="34" viewBox="0 0 34 34" class="text-gold"><g fill="none" stroke="currentColor" stroke-width="1"><path d="M8 19h18l-2 6H10z"></path><path d="M11 19c0-4 3-6 6-6s6 2 6 6"></path><circle cx="17" cy="10" r="1.4"></circle></g></svg>
-          <div class="font-ja text-[13px] tracking-widest2">アレルギー対応</div>
-          <div class="text-mute text-[10px] leading-relaxed">食材のご対応も<br>お気軽にご相談ください</div>
-        </div>
-      </div>
 
-      <!-- big reservation card -->
-      <div class="reveal relative border border-gold/40 p-6 md:p-12">
+      <!-- Unified outer container with gold border + corners -->
+      <div class="reveal relative border border-gold/40">
         <div class="corner corner-tl"></div>
         <div class="corner corner-tr"></div>
         <div class="corner corner-bl"></div>
         <div class="corner corner-br"></div>
 
-        <div class="grid md:grid-cols-12 gap-8 md:gap-12 items-stretch">
-          <div class="md:col-span-7 flex flex-col">
-            <div class="flex items-center gap-4">
-              <span class="font-cin text-gold text-[11px] tracking-widest2">— RESERVATION —</span>
-              <span class="hairline h-px flex-1"></span>
-            </div>
-            <h2 class="font-ja display-xl mt-6 leading-[1.35]">ご予約は<br>こちらから。</h2>
-            <p class="mt-6 text-cream/80 text-[15px] leading-[2.1] tracking-wider font-ja">
-              大切な時間を、最高の一皿とともに。<br>
-              皆様のお越しを心よりお待ちしております。
-            </p>
-            <div class="hairline w-full h-px mt-10 mb-10"></div>
+        <!-- ── Features strip ── -->
+        <div class="grid grid-cols-3 md:grid-cols-6 divide-x divide-gold/20 border-b border-gold/20">
 
-            <div class="grid sm:grid-cols-2 gap-6 mt-auto">
-              <a href="#" class="btn-gold w-full justify-center">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="14" height="13" rx="1" stroke="#1a1310"></rect><path d="M2 7h14M6 1v4M12 1v4" stroke="#1a1310"></path></svg>
-                <span>コースのご予約はこちら</span>
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5h12m0 0L9 1m4 4L9 9" stroke="#1a1310" stroke-width="1.4"></path></svg>
-              </a>
-              <div class="flex flex-col items-start sm:items-center justify-center">
-                <div class="text-gold/85 font-cin text-[11px] tracking-widest2">— OR CALL —</div>
-                <div class="mt-2 font-cin text-3xl text-cream tracking-wider">0154-64-0222</div>
-                <div class="mt-1 text-mute text-[11px] tracking-widest2">受付時間 17:00 — 22:00</div>
+          <!-- 完全予約制 -->
+          <div class="bg-[#0d0b09] px-3 py-7 flex flex-col items-center text-center gap-3">
+            <svg width="36" height="36" viewBox="0 0 36 36" class="text-gold" fill="none" stroke="currentColor" stroke-width="1">
+              <circle cx="18" cy="18" r="15"/>
+              <circle cx="18" cy="18" r="8.5"/>
+              <circle cx="18" cy="9.5" r="3"/>
+              <circle cx="25.6" cy="14" r="3"/>
+              <circle cx="22.8" cy="23" r="3"/>
+              <circle cx="13.2" cy="23" r="3"/>
+              <circle cx="10.4" cy="14" r="3"/>
+            </svg>
+            <div class="font-ja text-[13px] tracking-widest2 text-cream/90">完全予約制</div>
+            <div class="text-mute text-[10px] leading-relaxed">一日数組様限定で<br>お迎えしております。</div>
+          </div>
+
+          <!-- カウンター席 -->
+          <div class="bg-[#0d0b09] px-3 py-7 flex flex-col items-center text-center gap-3">
+            <svg width="36" height="36" viewBox="0 0 36 36" class="text-gold" fill="none" stroke="currentColor" stroke-width="1">
+              <line x1="3" y1="25" x2="33" y2="25"/>
+              <line x1="7"  y1="25" x2="7"  y2="29"/>
+              <line x1="18" y1="25" x2="18" y2="29"/>
+              <line x1="29" y1="25" x2="29" y2="29"/>
+              <path d="M4.5 25v-5.5a2.5 2.5 0 0 1 5 0V25"/>
+              <path d="M15.5 25v-5.5a2.5 2.5 0 0 1 5 0V25"/>
+              <path d="M26.5 25v-5.5a2.5 2.5 0 0 1 5 0V25"/>
+              <line x1="7"  y1="14" x2="7"  y2="9"/>
+              <line x1="18" y1="14" x2="18" y2="9"/>
+              <line x1="29" y1="14" x2="29" y2="9"/>
+            </svg>
+            <div class="font-ja text-[13px] tracking-widest2 text-cream/90">カウンター席</div>
+            <div class="text-mute text-[10px] leading-relaxed">職人の技を間近で<br>ご覧いただけます。</div>
+          </div>
+
+          <!-- 個室完備 -->
+          <div class="bg-[#0d0b09] px-3 py-7 flex flex-col items-center text-center gap-3">
+            <svg width="36" height="36" viewBox="0 0 36 36" class="text-gold" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="4" y="6" width="28" height="24"/>
+              <line x1="4"  y1="18" x2="32" y2="18"/>
+              <line x1="18" y1="6"  x2="18" y2="30"/>
+              <rect x="7"  y="9"  width="8" height="6"/>
+              <rect x="21" y="9"  width="8" height="6"/>
+              <rect x="7"  y="21" width="8" height="6"/>
+              <rect x="21" y="21" width="8" height="6"/>
+            </svg>
+            <div class="font-ja text-[13px] tracking-widest2 text-cream/90">個室完備</div>
+            <div class="text-mute text-[10px] leading-relaxed">大切な方とのお食事や<br>接待に最適です。</div>
+          </div>
+
+          <!-- 季節のコース -->
+          <div class="bg-[#0d0b09] px-3 py-7 flex flex-col items-center text-center gap-3">
+            <svg width="36" height="36" viewBox="0 0 36 36" class="text-gold" fill="none" stroke="currentColor" stroke-width="1">
+              <path d="M18 31 C18 31 7 22 7 13 C7 8 11 5 18 9 C25 5 29 8 29 13 C29 22 18 31 18 31z"/>
+              <line x1="18" y1="31" x2="18" y2="19"/>
+              <line x1="12" y1="16" x2="18" y2="21"/>
+              <line x1="24" y1="16" x2="18" y2="21"/>
+              <circle cx="9"  cy="8"  r="1.5" fill="currentColor"/>
+              <circle cx="27" cy="8"  r="1.5" fill="currentColor"/>
+              <circle cx="7"  cy="14" r="1.2" fill="currentColor"/>
+              <circle cx="29" cy="14" r="1.2" fill="currentColor"/>
+            </svg>
+            <div class="font-ja text-[13px] tracking-widest2 text-cream/90">季節のコース</div>
+            <div class="text-mute text-[10px] leading-relaxed">道東の旬を活かした<br>おまかせコースをご用意。</div>
+          </div>
+
+          <!-- 英語対応可 -->
+          <div class="bg-[#0d0b09] px-3 py-7 flex flex-col items-center text-center gap-3">
+            <svg width="36" height="36" viewBox="0 0 36 36" class="text-gold" fill="none" stroke="currentColor" stroke-width="1">
+              <circle cx="18" cy="18" r="13"/>
+              <ellipse cx="18" cy="18" rx="5.5" ry="13"/>
+              <line x1="5" y1="18" x2="31" y2="18"/>
+              <path d="M6.5 12.5h23"/>
+              <path d="M6.5 23.5h23"/>
+            </svg>
+            <div class="font-ja text-[13px] tracking-widest2 text-cream/90">英語対応可</div>
+            <div class="text-mute text-[10px] leading-relaxed">海外のお客様も<br>安心してご利用いただけます。</div>
+          </div>
+
+          <!-- アレルギー対応 -->
+          <div class="bg-[#0d0b09] px-3 py-7 flex flex-col items-center text-center gap-3">
+            <svg width="36" height="36" viewBox="0 0 36 36" class="text-gold" fill="none" stroke="currentColor" stroke-width="1">
+              <path d="M8 21 Q18 15 28 21 L26 28 Q18 32 10 28Z"/>
+              <ellipse cx="18" cy="20.5" rx="10" ry="4.5"/>
+              <circle cx="18" cy="13" r="2.8"/>
+              <circle cx="13.5" cy="9.5" r="1.5" fill="currentColor"/>
+              <circle cx="22.5" cy="9.5" r="1.5" fill="currentColor"/>
+              <circle cx="18"   cy="7.5" r="1.3" fill="currentColor"/>
+            </svg>
+            <div class="font-ja text-[13px] tracking-widest2 text-cream/90">アレルギー対応</div>
+            <div class="text-mute text-[10px] leading-relaxed">食材のご対応も<br>お気軽にご相談ください。</div>
+          </div>
+
+        </div><!-- end features strip -->
+
+        <!-- ── CTA area ── -->
+        <a href="#" id="reserve-cta" class="block cursor-pointer transition-opacity duration-300 hover:opacity-95 group overflow-hidden">
+          <div class="flex flex-col md:flex-row">
+
+            <!-- left: text -->
+            <div class="flex-1 bg-[#0d0b09] px-8 py-10 md:px-12 md:py-12 flex flex-col justify-between min-h-[300px] md:min-h-[320px]">
+              <div>
+                <div class="flex items-center gap-4">
+                  <span class="font-ja text-gold text-[13px] tracking-widest2">完全予約制</span>
+                  <span class="hairline h-px flex-1"></span>
+                </div>
+                <h2 class="gold-foil font-ja display-xl mt-5 leading-[1.25]">ご予約はこちらから</h2>
+                <p class="mt-4 text-cream/80 text-[14px] md:text-[15px] leading-[2] tracking-wider font-ja">
+                  大切な時間を、最高の一皿とともに。<br>
+                  皆様のお越しを心よりお待ちしております。
+                </p>
+              </div>
+              <div>
+                <div class="hairline w-full h-px mb-7"></div>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                  <!-- Gold CTA button -->
+                  <span class="btn-gold inline-flex items-center gap-3 pointer-events-none whitespace-nowrap">
+                    <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                      <rect x="2" y="3" width="14" height="13" rx="1" stroke="#1a1310" stroke-width="1.3"/>
+                      <path d="M2 7h14M6 1v4M12 1v4" stroke="#1a1310" stroke-width="1.3"/>
+                    </svg>
+                    <span>ご予約・お問い合わせ</span>
+                    <svg width="7" height="11" viewBox="0 0 7 11" fill="none">
+                      <path d="M1 1l5 4.5L1 10" stroke="#1a1310" stroke-width="1.3"/>
+                    </svg>
+                  </span>
+                  <!-- Phone -->
+                  <div class="flex flex-col">
+                    <div class="text-gold/85 font-ja text-[11px] tracking-widest2">お電話でのご予約</div>
+                    <div class="flex items-center gap-2 mt-1">
+                      <svg class="text-gold shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1">
+                        <path d="M3 2.5c-.2 0-.4.1-.5.3L1.6 4.4C1 5.6 1.4 7.3 2.8 9.2c1.4 1.8 3 3.2 4.4 3.8 1.3.6 2.6.4 3.2-.3l1-1.2c.3-.3.2-.8-.1-1l-1.7-1.1c-.3-.2-.7-.1-.9.1l-.6.7c-.2.2-.5.3-.8.1C6.5 9.6 5.5 8.7 4.8 7.7 4.1 6.8 3.9 5.9 4.1 5.6l.6-.7c.2-.2.2-.6 0-.9L3.6 2.7c-.2-.1-.4-.2-.6-.2z"/>
+                      </svg>
+                      <div class="font-cin text-[22px] text-cream tracking-wider">0154-64-0222</div>
+                    </div>
+                    <div class="mt-1 text-mute text-[11px] tracking-widest2">受付時間 17:00〜22:00</div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="md:col-span-5 relative img-zoom overflow-hidden min-h-[260px]">
-            <img src="assets/images/23c5b70b-39dc-491b-9519-5e0b5d5dbd32.png" alt="店内 暖簾 灯り" class="w-full h-full object-cover absolute inset-0">
-            <div class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-ink/30"></div>
-            <div class="absolute left-5 bottom-5 right-5 flex items-end justify-between">
-              <div class="font-cin text-[10px] tracking-widest2 text-gold/90">— WELCOME —</div>
-              <div class="vrl font-ja text-gold text-base tracking-widest2">心よりお待ちしております</div>
+            <!-- right: photo -->
+            <div class="hidden md:block relative w-[44%] overflow-hidden">
+              <img src="assets/images/crab-counter.png" alt="店内" class="w-full h-full object-cover absolute inset-0 group-hover:scale-[1.02] transition-transform duration-700">
+              <div class="absolute inset-0 bg-gradient-to-r from-[#0d0b09]/75 via-[#0d0b09]/25 to-transparent"></div>
             </div>
+
           </div>
-        </div>
-      </div>
+        </a><!-- end CTA -->
+
+      </div><!-- end outer container -->
+
     </div>
   </section>
 
@@ -647,13 +736,13 @@
       <div class="md:col-span-4">
         <div class="font-cin text-[10px] tracking-widest2 text-gold/80">SITEMAP</div>
         <ul class="mt-6 grid grid-cols-2 gap-y-3 text-cream/80 text-[13px] tracking-wider">
-          <li><a href="#concept" class="ulink">概念</a></li>
-          <li><a href="#ingredients" class="ulink">食材</a></li>
-          <li><a href="#course" class="ulink">献立</a></li>
-          <li><a href="#space" class="ulink">空間</a></li>
-          <li><a href="#voice" class="ulink">体験</a></li>
-          <li><a href="#access" class="ulink">案内</a></li>
-          <li><a href="#reserve" class="ulink">ご予約</a></li>
+          <li><a href="#concept" class="ulink" data-i18n="footer_concept">店主の想い</a></li>
+          <li><a href="#ingredients" class="ulink" data-i18n="footer_ingredients">食材</a></li>
+          <li><a href="#course" class="ulink" data-i18n="footer_menu">メニュー</a></li>
+          <li><a href="#space" class="ulink" data-i18n="footer_shop">店舗</a></li>
+          <li><a href="#voice" class="ulink" data-i18n="footer_voice">顧客の声</a></li>
+          <li><a href="#access" class="ulink" data-i18n="footer_access">案内</a></li>
+          <li><a href="#reserve" class="ulink" data-i18n="footer_reserve">ご予約</a></li>
         </ul>
       </div>
 
