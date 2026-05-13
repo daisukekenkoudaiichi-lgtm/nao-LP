@@ -114,11 +114,6 @@
     writing-mode: horizontal-tb;
     display: inline-block;
   }
-  @media (max-width: 640px) {
-    .stickycta { right: 12px; }
-    .stickycta .btn-vrl { padding: 1.1rem .7rem; font-size: 12px; letter-spacing: .22em; }
-  }
-
   /* gold button */
   .btn-gold {
     position: relative;
@@ -299,6 +294,42 @@
 
   /* fine borders for testimonial */
   .quote-mark { font-family:'Cormorant Garamond', serif; color:#8a7340; line-height: 0; font-size: 90px; }
+  @media (max-width: 639px) {
+    .quote-mark { font-size: 52px; }
+  }
+
+  /* sticky CTA — compact bottom pill on phones */
+  @media (max-width: 639px) {
+    .stickycta {
+      top: auto;
+      bottom: max(12px, env(safe-area-inset-bottom, 0px));
+      right: 50%;
+      transform: translate(50%, 16px);
+    }
+    .stickycta.show {
+      transform: translate(50%, 0);
+    }
+    .stickycta .btn-vrl {
+      writing-mode: horizontal-tb;
+      text-orientation: mixed;
+      flex-direction: row;
+      align-items: center;
+      padding: 0.72rem 1.15rem;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+    }
+    .stickycta .btn-vrl .arrow {
+      margin-top: 0;
+      margin-left: 0.45rem;
+    }
+    .stickycta .btn-vrl:hover {
+      transform: none;
+      filter: brightness(1.04);
+    }
+    main > footer {
+      padding-bottom: max(5.5rem, calc(4rem + env(safe-area-inset-bottom, 0px)));
+    }
+  }
 
   /* table-like info rows */
   .info-row { border-bottom: 1px solid rgba(138,115,64,.25); }
@@ -317,7 +348,13 @@
   #reserveModal.is-open .reserve-modal-backdrop { opacity: 1; }
   #reserveModal.is-open .reserve-modal-panel { opacity: 1; transform: none; }
 
-  .reserve-steps-wrap { position: relative; min-height: 360px; }
+  .reserve-steps-wrap { position: relative; min-height: 260px; }
+  @media (min-width: 480px) {
+    .reserve-steps-wrap { min-height: 300px; }
+  }
+  @media (min-width: 640px) {
+    .reserve-steps-wrap { min-height: 360px; }
+  }
   @media (min-width: 768px) {
     .reserve-steps-wrap { min-height: 420px; }
   }
