@@ -114,6 +114,12 @@
     writing-mode: horizontal-tb;
     display: inline-block;
   }
+  /* hero: full photo visible (letterbox with page background) */
+  #hero .hero-photo {
+    object-fit: contain;
+    object-position: center;
+  }
+
   /* gold button */
   .btn-gold {
     position: relative;
