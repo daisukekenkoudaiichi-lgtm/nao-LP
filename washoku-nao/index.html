@@ -71,17 +71,24 @@
 
   <!-- HERO ============================================ -->
   <section class="relative w-full bg-ink overflow-hidden" id="hero">
-    <!-- Hero composition fills full viewport -->
     <div class="absolute inset-0">
-      <img src="assets/images/1c570a32-4d1c-49a2-9bf0-fcdea9507997.jpg" alt="和食 直 — 道東の全てを堪能する" class="hero-photo w-full h-full max-h-full select-none" decoding="async" draggable="false">
-      <!-- subtle top vignette so nav reads -->
-      <div class="absolute inset-x-0 top-0 h-32 vignette-top pointer-events-none"></div>
-      <!-- bottom blend into next section -->
-      <div class="absolute inset-x-0 bottom-0 h-32 vignette-bottom pointer-events-none"></div>
+      <img src="assets/images/1c570a32-4d1c-49a2-9bf0-fcdea9507997.jpg" alt="店内で料理に向き合う板前の姿" class="hero-bg-img h-full w-full max-h-full select-none" decoding="async" draggable="false">
+      <div class="hero-scrim pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="absolute inset-x-0 top-0 h-28 vignette-top pointer-events-none md:h-32"></div>
+      <div class="absolute inset-x-0 bottom-0 h-24 vignette-bottom pointer-events-none md:h-32"></div>
+    </div>
+
+    <div class="hero-fg pointer-events-none absolute inset-0 z-[15] flex flex-col items-start px-5 pt-[max(5rem,calc(env(safe-area-inset-top,0px)+3.5rem))] sm:px-8 md:px-12 md:pt-[max(5.5rem,calc(env(safe-area-inset-top,0px)+4rem))]">
+      <p class="hero-brand pointer-events-auto font-ja font-medium tracking-wider text-cream">
+        <span class="hero-brand-line">和食 <span class="text-gold">直</span></span>
+      </p>
+      <h1 class="hero-headline pointer-events-auto gold-foil font-ja font-semibold leading-[1.28] tracking-wide">
+        <span class="hero-headline-inner">道東の全てを<br class="md:hidden">堪能する。</span>
+      </h1>
     </div>
 
     <!-- Scroll cue -->
-    <div class="absolute left-1/2 -translate-x-1/2 bottom-6 z-10 flex flex-col items-center gap-3 pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]">
+    <div class="absolute left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 pb-[max(0.35rem,env(safe-area-inset-bottom,0px))] max-md:bottom-5 bottom-6 md:bottom-7 md:gap-3">
       <span class="font-cin text-[10px] tracking-widest2 text-gold/80">SCROLL</span>
       <span class="scroll-dot"></span>
     </div>

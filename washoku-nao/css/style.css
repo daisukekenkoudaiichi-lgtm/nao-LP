@@ -114,12 +114,6 @@
     writing-mode: horizontal-tb;
     display: inline-block;
   }
-  /* hero: full photo visible (letterbox with page background) */
-  #hero .hero-photo {
-    object-fit: contain;
-    object-position: center;
-  }
-
   /* hero height: desktop stable viewport; phone uses dvh + lvh for maximum usable canvas */
   #hero {
     min-height: 100vh;
@@ -130,6 +124,68 @@
     #hero {
       min-height: 100dvh;
       min-height: 100lvh;
+    }
+  }
+
+  /* hero — smartphone-first: full-bleed image + large type; desktop keeps letterboxed photo */
+  #hero .hero-bg-img {
+    object-fit: cover;
+    object-position: 52% 22%;
+  }
+  @media (min-width: 640px) {
+    #hero .hero-bg-img {
+      object-fit: contain;
+      object-position: center;
+    }
+  }
+  #hero .hero-scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 8, 7, 0.62) 0%,
+      rgba(10, 8, 7, 0.12) 38%,
+      rgba(10, 8, 7, 0.08) 55%,
+      rgba(10, 8, 7, 0.75) 100%
+    );
+  }
+  @media (min-width: 640px) {
+    #hero .hero-scrim {
+      background: linear-gradient(
+        180deg,
+        rgba(10, 8, 7, 0.45) 0%,
+        rgba(10, 8, 7, 0) 42%,
+        rgba(10, 8, 7, 0.35) 100%
+      );
+    }
+  }
+  #hero .hero-brand-line {
+    display: inline-block;
+    font-size: clamp(2rem, 9.2vw, 3.35rem);
+    line-height: 1.15;
+    letter-spacing: 0.14em;
+    filter: drop-shadow(0 3px 28px rgba(0, 0, 0, 0.75));
+  }
+  #hero .hero-headline {
+    margin-top: 1.35rem;
+    max-width: min(92vw, 22.5rem);
+    filter: drop-shadow(0 4px 32px rgba(0, 0, 0, 0.82));
+  }
+  @media (min-width: 640px) {
+    #hero .hero-headline {
+      margin-top: 1.75rem;
+      max-width: 40rem;
+    }
+  }
+  #hero .hero-headline-inner {
+    display: block;
+    font-size: clamp(2.05rem, 10.5vw, 3.75rem);
+    line-height: 1.22;
+    letter-spacing: 0.06em;
+  }
+  @media (min-width: 640px) {
+    #hero .hero-headline-inner {
+      font-size: clamp(2.4rem, 5.2vw, 4.25rem);
+      line-height: 1.2;
+      letter-spacing: 0.05em;
     }
   }
 
