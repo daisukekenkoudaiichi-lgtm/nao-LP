@@ -127,42 +127,71 @@
     }
   }
 
-  /* hero — smartphone-first: full-bleed image + large type; desktop keeps letterboxed photo */
+  /* hero — smartphone-first: full-bleed chef portrait; cover on all viewports */
   #hero .hero-bg-img {
     object-fit: cover;
-    object-position: 52% 22%;
+    object-position: center 15%;
   }
   @media (min-width: 640px) {
     #hero .hero-bg-img {
-      object-fit: contain;
-      object-position: center;
+      object-fit: cover;
+      object-position: 65% center;
     }
   }
   #hero .hero-scrim {
     background: linear-gradient(
       180deg,
-      rgba(10, 8, 7, 0.62) 0%,
-      rgba(10, 8, 7, 0.12) 38%,
-      rgba(10, 8, 7, 0.08) 55%,
-      rgba(10, 8, 7, 0.75) 100%
+      rgba(10, 8, 7, 0.70) 0%,
+      rgba(10, 8, 7, 0.20) 40%,
+      rgba(10, 8, 7, 0.10) 58%,
+      rgba(10, 8, 7, 0.80) 100%
     );
   }
   @media (min-width: 640px) {
     #hero .hero-scrim {
-      background: linear-gradient(
-        180deg,
-        rgba(10, 8, 7, 0.45) 0%,
-        rgba(10, 8, 7, 0) 42%,
-        rgba(10, 8, 7, 0.35) 100%
-      );
+      background:
+        linear-gradient(90deg,
+          rgba(10, 8, 7, 0.92) 0%,
+          rgba(10, 8, 7, 0.65) 38%,
+          rgba(10, 8, 7, 0.18) 65%,
+          rgba(10, 8, 7, 0.05) 100%
+        ),
+        linear-gradient(180deg,
+          rgba(10, 8, 7, 0.55) 0%,
+          rgba(10, 8, 7, 0) 28%,
+          rgba(10, 8, 7, 0) 70%,
+          rgba(10, 8, 7, 0.50) 100%
+        );
     }
   }
-  #hero .hero-brand-line {
-    display: inline-block;
-    font-size: clamp(2rem, 9.2vw, 3.35rem);
-    line-height: 1.15;
-    letter-spacing: 0.14em;
-    filter: drop-shadow(0 3px 28px rgba(0, 0, 0, 0.75));
+  #hero .hero-brand-eyebrow {
+    font-size: clamp(0.78rem, 3.2vw, 0.95rem);
+    line-height: 1.2;
+    letter-spacing: 0.22em;
+    filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.85));
+  }
+  #hero .hero-brand-kanji {
+    font-size: clamp(3.6rem, 17vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0;
+    filter: drop-shadow(0 4px 28px rgba(0, 0, 0, 0.80));
+  }
+  #hero .hero-brand-footer {
+    filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.85));
+  }
+  #hero .hero-brand-stamp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.45em;
+    height: 1.45em;
+    background: #8b1a1a;
+    color: #f4ece0;
+    font-size: 0.68em;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0;
   }
   #hero .hero-headline {
     margin-top: 1.35rem;
