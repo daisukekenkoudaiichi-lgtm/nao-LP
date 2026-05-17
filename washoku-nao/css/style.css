@@ -127,10 +127,10 @@
     }
   }
 
-  /* hero — smartphone-first: full-bleed image + large type; desktop keeps letterboxed photo */
+  /* hero — smartphone: full-bleed portrait; desktop: letterboxed landscape */
   #hero .hero-bg-img {
     object-fit: cover;
-    object-position: 52% 22%;
+    object-position: center top;
   }
   @media (min-width: 640px) {
     #hero .hero-bg-img {
