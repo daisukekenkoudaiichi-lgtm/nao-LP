@@ -127,15 +127,15 @@
     }
   }
 
-  /* hero — smartphone: full-bleed portrait; desktop: letterboxed landscape */
+  /* hero — 両画像ともテキスト埋め込み済み: 全サイズ cover で全画面表示 */
   #hero .hero-bg-img {
     object-fit: cover;
     object-position: center top;
   }
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     #hero .hero-bg-img {
-      object-fit: contain;
-      object-position: center;
+      object-fit: cover;
+      object-position: center center;
     }
   }
   #hero .hero-scrim {

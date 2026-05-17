@@ -73,25 +73,17 @@
   <section class="relative w-full bg-ink overflow-hidden" id="hero">
     <div class="absolute inset-0">
       <picture>
-        <!-- mobile: portrait hero (text baked in) -->
-        <source media="(max-width: 639px)" srcset="assets/images/hero-mobile.jpg">
-        <!-- desktop: landscape hero -->
-        <img src="assets/images/1c570a32-4d1c-49a2-9bf0-fcdea9507997.jpg" alt="和食 直 — 道東の全てを堪能する" class="hero-bg-img h-full w-full max-h-full select-none" decoding="async" draggable="false">
+        <!-- スマホ: 縦型ヒーロー画像（テキスト埋め込み済み） -->
+        <source media="(max-width: 767px)" srcset="assets/images/hero-mobile.jpg">
+        <!-- PC: 横型ヒーロー画像（テキスト埋め込み済み） -->
+        <img src="assets/images/hero-desktop.jpg" alt="和食 直 — 道東の全てを堪能する" class="hero-bg-img h-full w-full select-none" decoding="async" draggable="false">
       </picture>
-      <div class="hero-scrim pointer-events-none absolute inset-0" aria-hidden="true"></div>
-      <div class="absolute inset-x-0 top-0 h-28 vignette-top pointer-events-none md:h-32"></div>
-      <div class="absolute inset-x-0 bottom-0 h-24 vignette-bottom pointer-events-none md:h-32"></div>
+      <div class="absolute inset-x-0 top-0 h-20 vignette-top pointer-events-none"></div>
+      <div class="absolute inset-x-0 bottom-0 h-20 vignette-bottom pointer-events-none"></div>
     </div>
 
-    <!-- テキストオーバーレイ: モバイルは画像に埋め込み済みなので非表示 -->
-    <div class="hero-fg pointer-events-none absolute inset-0 z-[15] hidden sm:flex flex-col items-start px-5 pt-[max(5rem,calc(env(safe-area-inset-top,0px)+3.5rem))] sm:px-8 md:px-12 md:pt-[max(5.5rem,calc(env(safe-area-inset-top,0px)+4rem))]">
-      <p class="hero-brand pointer-events-auto font-ja font-medium tracking-wider text-cream">
-        <span class="hero-brand-line">和食 <span class="text-gold">直</span></span>
-      </p>
-      <h1 class="hero-headline pointer-events-auto gold-foil font-ja font-semibold leading-[1.28] tracking-wide">
-        <span class="hero-headline-inner">道東の全てを<br class="md:hidden">堪能する。</span>
-      </h1>
-    </div>
+    <!-- 両画像ともテキスト埋め込み済みのため非表示（アクセシビリティ用に残す） -->
+    <h1 class="sr-only">和食 直 — 道東の全てを堪能する</h1>
 
     <!-- Scroll cue -->
     <div class="absolute left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 pb-[max(0.35rem,env(safe-area-inset-bottom,0px))] max-md:bottom-5 bottom-6 md:bottom-7 md:gap-3">
