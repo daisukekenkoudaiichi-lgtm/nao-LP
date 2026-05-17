@@ -114,28 +114,48 @@
     writing-mode: horizontal-tb;
     display: inline-block;
   }
-  /* hero height: desktop stable viewport; phone uses dvh + lvh for maximum usable canvas */
+  /* ── Hero layout ──────────────────────────────────── */
+
+  /* スマホ: セクション = ビューポート高さ100% */
   #hero {
     min-height: 100vh;
     min-height: 100svh;
     min-height: 100dvh;
   }
-  @media (max-width: 639px) {
+  /* PC: セクション高さを画像に合わせて自動 */
+  @media (min-width: 768px) {
     #hero {
-      min-height: 100dvh;
-      min-height: 100lvh;
+      min-height: 0;
+      height: auto;
     }
   }
 
-  /* hero — 両画像ともテキスト埋め込み済み: 全サイズ cover で全画面表示 */
+  /* スマホ: 画像ラッパーを絶対配置でフルスクリーン */
+  .hero-img-wrap {
+    position: absolute;
+    inset: 0;
+  }
+  /* PC: 画像ラッパーを通常フロー（高さ=画像の自然サイズ） */
+  @media (min-width: 768px) {
+    .hero-img-wrap {
+      position: relative;
+      width: 100%;
+    }
+  }
+
+  /* スマホ: 画像をコンテナに cover で全画面フィル */
   #hero .hero-bg-img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     object-position: center top;
+    display: block;
   }
+  /* PC: 画像を自然サイズ（幅100%・高さauto）で表示 → クリップなし */
   @media (min-width: 768px) {
     #hero .hero-bg-img {
-      object-fit: cover;
-      object-position: center center;
+      height: auto;
+      object-fit: initial;
     }
   }
   #hero .hero-scrim {

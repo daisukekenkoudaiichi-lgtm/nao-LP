@@ -71,25 +71,28 @@
 
   <!-- HERO ============================================ -->
   <section class="relative w-full bg-ink overflow-hidden" id="hero">
-    <div class="absolute inset-0">
+
+    <!-- 画像ラッパー: スマホ=絶対配置フルスクリーン / PC=自然サイズで表示 -->
+    <div class="hero-img-wrap">
       <picture>
-        <!-- スマホ: 縦型ヒーロー画像（テキスト埋め込み済み） -->
+        <!-- スマホ(〜767px): 縦型ヒーロー（テキスト埋め込み済み） -->
         <source media="(max-width: 767px)" srcset="assets/images/hero-mobile.jpg">
-        <!-- PC: 横型ヒーロー画像（テキスト埋め込み済み） -->
-        <img src="assets/images/hero-desktop.jpg" alt="和食 直 — 道東の全てを堪能する" class="hero-bg-img h-full w-full select-none" decoding="async" draggable="false">
+        <!-- PC(768px〜): 横型ヒーロー（テキスト埋め込み済み） -->
+        <img src="assets/images/hero-desktop.jpg" alt="和食 直 — 道東の全てを堪能する" class="hero-bg-img select-none" decoding="async" draggable="false">
       </picture>
       <div class="absolute inset-x-0 top-0 h-20 vignette-top pointer-events-none"></div>
-      <div class="absolute inset-x-0 bottom-0 h-20 vignette-bottom pointer-events-none"></div>
+      <div class="absolute inset-x-0 bottom-0 h-16 vignette-bottom pointer-events-none"></div>
     </div>
 
-    <!-- 両画像ともテキスト埋め込み済みのため非表示（アクセシビリティ用に残す） -->
+    <!-- アクセシビリティ用見出し（非表示） -->
     <h1 class="sr-only">和食 直 — 道東の全てを堪能する</h1>
 
     <!-- Scroll cue -->
-    <div class="absolute left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 pb-[max(0.35rem,env(safe-area-inset-bottom,0px))] max-md:bottom-5 bottom-6 md:bottom-7 md:gap-3">
+    <div class="absolute left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 pb-[max(0.35rem,env(safe-area-inset-bottom,0px))] bottom-5 md:bottom-7 md:gap-3">
       <span class="font-cin text-[10px] tracking-widest2 text-gold/80">SCROLL</span>
       <span class="scroll-dot"></span>
     </div>
+
   </section>
 
   <!-- CONCEPT ========================================== -->
@@ -330,7 +333,7 @@
       <!-- Asymmetric grid -->
       <div class="grid grid-cols-12 gap-3 md:gap-6">
         <div class="col-span-12 md:col-span-7 img-zoom relative aspect-[16/11] overflow-hidden reveal reveal-l">
-          <img src="assets/images/23c5b70b-39dc-491b-9519-5e0b5d5dbd32.png" alt="店内入口 暖簾と石" class="w-full h-full object-cover">
+          <img src="assets/images/crab-counter.jpg" alt="カウンターに並ぶ毛蟹と日本酒" class="w-full h-full object-cover object-[center_55%]">
           <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent"></div>
           <div class="absolute left-6 bottom-6">
             <div class="font-cin text-[10px] tracking-widest2 text-gold">01 / ENTRANCE</div>
@@ -359,26 +362,6 @@
             <div class="absolute left-6 bottom-6">
               <div class="font-cin text-[10px] tracking-widest2 text-gold">02 / COUNTER</div>
               <div class="font-ja text-xl mt-2">八席のカウンター</div>
-            </div>
-          </div>
-          <div class="img-zoom relative aspect-[4/3] overflow-hidden bg-ink3 reveal reveal-r">
-            <!-- private room placeholder -->
-            <div class="absolute inset-0" style="background:
-              radial-gradient(80% 60% at 50% 100%, rgba(201,168,106,0.12), transparent 55%),
-              linear-gradient(180deg,#1a1410 0%, #0c0a09 100%);"></div>
-            <!-- tatami grid -->
-            <div class="absolute inset-x-6 bottom-6 top-[42%] opacity-50" style="
-              background-image:
-                linear-gradient(rgba(138,115,64,.25) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(138,115,64,.25) 1px, transparent 1px);
-              background-size: 28% 50%, 33% 50%;
-            "></div>
-            <div class="absolute left-1/2 top-[18%] -translate-x-1/2 w-16 h-1" style="background: linear-gradient(90deg, transparent, #c9a86a, transparent);"></div>
-            <div class="absolute left-1/2 top-[24%] -translate-x-1/2 text-gold/60 font-ja text-sm tracking-widest2">床　の　間</div>
-            <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent"></div>
-            <div class="absolute left-6 bottom-6">
-              <div class="font-cin text-[10px] tracking-widest2 text-gold">03 / PRIVATE</div>
-              <div class="font-ja text-xl mt-2">三つの個室</div>
             </div>
           </div>
         </div>
@@ -564,7 +547,7 @@
         <div class="corner corner-br"></div>
 
         <!-- ── Features strip ── -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-px bg-gold/20 border-b border-gold/20">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-px bg-gold/20 border-b border-gold/20">
 
           <!-- 完全予約制 -->
           <div class="bg-[#0d0b09] px-2 py-6 sm:px-3 sm:py-7 flex flex-col items-center text-center gap-2 sm:gap-3">
@@ -597,21 +580,6 @@
             </svg>
             <div class="font-ja text-[12px] sm:text-[13px] tracking-widest2 text-cream/90 leading-tight">カウンター席</div>
             <div class="text-mute text-[9px] sm:text-[10px] leading-relaxed">職人の技を間近で<br>ご覧いただけます。</div>
-          </div>
-
-          <!-- 個室完備 -->
-          <div class="bg-[#0d0b09] px-2 py-6 sm:px-3 sm:py-7 flex flex-col items-center text-center gap-2 sm:gap-3">
-            <svg width="36" height="36" viewBox="0 0 36 36" class="text-gold shrink-0" fill="none" stroke="currentColor" stroke-width="1">
-              <rect x="4" y="6" width="28" height="24"/>
-              <line x1="4"  y1="18" x2="32" y2="18"/>
-              <line x1="18" y1="6"  x2="18" y2="30"/>
-              <rect x="7"  y="9"  width="8" height="6"/>
-              <rect x="21" y="9"  width="8" height="6"/>
-              <rect x="7"  y="21" width="8" height="6"/>
-              <rect x="21" y="21" width="8" height="6"/>
-            </svg>
-            <div class="font-ja text-[12px] sm:text-[13px] tracking-widest2 text-cream/90 leading-tight">個室完備</div>
-            <div class="text-mute text-[9px] sm:text-[10px] leading-relaxed">大切な方とのお食事や<br>接待に最適です。</div>
           </div>
 
           <!-- 季節のコース -->
