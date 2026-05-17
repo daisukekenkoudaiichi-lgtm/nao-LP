@@ -251,6 +251,42 @@
   }
   .btn-outline:hover { background: rgba(201,168,106,.08); border-color:#c9a86a; color:#f4ece0; }
 
+  /* ── Reservation Calendar ────────────────────────── */
+  .cal-dow-row { border-bottom: 1px solid rgba(74,62,42,.4); margin: 0 1rem .5rem; }
+  .cal-dow { font-family: 'Shippori Mincho B1', serif; font-size: 11px; letter-spacing: .1em; color: #6a5836; padding: .4rem 0; }
+
+  .cal-cell {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; padding: .45rem .15rem; border-radius: 3px;
+    font-family: 'Shippori Mincho B1', serif; cursor: pointer;
+    border: 1px solid transparent; transition: border-color .2s, background .2s;
+    background: transparent;
+  }
+  .cal-day-num  { font-size: 14px; line-height: 1; color: #f4ece0; }
+  .cal-day-seat { font-size: 9px; letter-spacing: .05em; line-height: 1; }
+
+  /* 状態別スタイル */
+  .cal-open  { }
+  .cal-open  .cal-day-seat { color: #34d399; }
+  .cal-open:hover  { background: rgba(52,211,153,.08); border-color: rgba(52,211,153,.3); }
+
+  .cal-warn  .cal-day-seat { color: #fbbf24; }
+  .cal-warn:hover  { background: rgba(251,191,36,.08); border-color: rgba(251,191,36,.3); }
+
+  .cal-full  .cal-day-num  { color: #6a5836; }
+  .cal-full  .cal-day-seat { color: #f87171; font-size: 8px; }
+  .cal-full  { cursor: not-allowed; }
+
+  .cal-closed .cal-day-num  { color: #3a3228; }
+  .cal-closed .cal-day-seat { color: #3a3228; font-size: 8px; }
+  .cal-closed { cursor: not-allowed; }
+
+  .cal-today  { border-color: rgba(201,168,106,.5) !important; }
+  .cal-today .cal-day-num { color: #c9a86a; }
+
+  .cal-selected { background: rgba(201,168,106,.12) !important; border-color: #c9a86a !important; }
+  .cal-empty    { cursor: default; }
+
   /* underline link */
   .ulink { position: relative; padding-bottom: 2px; }
   .ulink::after {
