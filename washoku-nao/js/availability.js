@@ -1,273 +1,393 @@
 /**
- * availability.js — 予約空席カレンダー
+ * availability.js — 予約空席カレンダー + 予約フォーム
  *
- * ■ 運用方法（手動モード）
- *   RESERVATIONS に「日付: 予約済み人数」を入力するだけ。
- *   例: '2026-05-18': 7  → 満席10のうち7予約済み = 残り3席
- *
- * ■ 休業日
- *   毎週日曜、毎月第2月曜が自動で休業日になります。
- *   EXTRA_CLOSED に追加の休業日を書けます。
- *
- * ■ 将来のAPI連携
- *   API_URL にエンドポイントを設定するとAPIから取得します。
+ * ■ 手動運用: RESERVATIONS に「日付: 予約済み人数」を入力
+ * ■ API連携:  API_URL を設定すると Supabase から自動取得
  */
 
 /* ═══════════════════════════════════════════
- * ★ 設定エリア（ここだけ変更すればOK）
+ * 設定（ここだけ変更すればOK）
  * ═══════════════════════════════════════════ */
 const CAL_CONFIG = {
-  totalSeats: 10,           // 1日あたりの最大受入数
-  warnThreshold: 3,         // この席数以下で「残りわずか」表示
-  contactEmail: 'info@washoku-nao.jp',
+  totalSeats    : 10,
+  warnThreshold : 3,
+  contactEmail  : 'info@washoku-nao.jp',
 
-  // 予約済み人数（日付 → 埋まっている席数）
-  // 0 = 空き満席 / totalSeats以上 = 満席
   reservations: {
-    // ── 2026年5月 ──
-    '2026-05-21': 8,
-    '2026-05-22': 10,   // 満席
-    '2026-05-23': 10,   // 満席
-    '2026-05-27': 7,
-    '2026-05-28': 10,   // 満席
-    '2026-05-29': 9,
-    '2026-05-30': 10,   // 満席
-    // ── 2026年6月 ──
+    '2026-05-29': 10,
+    '2026-05-30': 10,
+    '2026-05-31': 10,
     '2026-06-03': 8,
-    '2026-06-05': 10,   // 満席
+    '2026-06-05': 10,
     '2026-06-10': 7,
-    '2026-06-12': 10,   // 満席
+    '2026-06-12': 10,
     '2026-06-17': 6,
-    '2026-06-19': 10,   // 満席
+    '2026-06-19': 10,
   },
 
-  // 定休日以外の臨時休業日
-  extraClosed: [
-    // '2026-06-15',
-  ],
+  extraClosed: [],
 };
 
-// API連携（nullなら手動設定を使用）
-const API_URL = null;
-// 例: const API_URL = '/api/availability';
+const API_URL = null; // 将来: '/api/availability'
 
 /* ═══════════════════════════════════════════
- * 内部ロジック
+ * 状態
  * ═══════════════════════════════════════════ */
-
 let currentYear, currentMonth, reservationData;
+let selectedDate = null; // { y, m, d, avail, label }
 
-function pad(n) { return String(n).padStart(2, '0'); }
-function dateKey(y, m, d) { return `${y}-${pad(m)}-${pad(d)}`; }
+/* ═══════════════════════════════════════════
+ * ユーティリティ
+ * ═══════════════════════════════════════════ */
+const DOW    = ['日', '月', '火', '水', '木', '金', '土'];
+function pad(n)            { return String(n).padStart(2, '0'); }
+function dateKey(y, m, d)  { return `${y}-${pad(m)}-${pad(d)}`; }
+function isSunday(y, m, d) { return new Date(y, m - 1, d).getDay() === 0; }
 
-// 第N月曜判定
-function isNthMonday(date, n) {
-  if (date.getDay() !== 1) return false;
-  return Math.ceil(date.getDate() / 7) === n;
-}
-
-// 休業日判定（毎週日曜 + 第2月曜 + 臨時）
 function isClosed(y, m, d) {
-  const date = new Date(y, m - 1, d);
-  const dow  = date.getDay();
-  if (dow === 0) return true;                        // 日曜
-  if (isNthMonday(date, 2)) return true;             // 第2月曜
+  if (isSunday(y, m, d)) return true;
   if (CAL_CONFIG.extraClosed.includes(dateKey(y, m, d))) return true;
   return false;
 }
 
-// 空席数を返す
 function getAvailable(y, m, d) {
-  const key    = dateKey(y, m, d);
-  const booked = reservationData[key] ?? 0;
+  const booked = reservationData[dateKey(y, m, d)] ?? 0;
   return Math.max(0, CAL_CONFIG.totalSeats - booked);
 }
 
-/* ─── カレンダー描画 ─── */
+/* ═══════════════════════════════════════════
+ * カレンダー描画
+ * ═══════════════════════════════════════════ */
 function renderCalendar(y, m) {
   currentYear  = y;
   currentMonth = m;
 
-  const label  = document.getElementById('cal-month-label');
-  const grid   = document.getElementById('cal-grid');
-  const info   = document.getElementById('cal-selected-info');
-  if (!grid) return;
+  document.getElementById('cal-month-label').textContent = `${y}年 ${m}月`;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  document.getElementById('cal-selected-info')?.classList.add('hidden');
 
-  label.textContent = `${y}年 ${m}月`;
-  grid.innerHTML    = '';
-  if (info) info.classList.add('hidden');
-
-  const firstDay = new Date(y, m - 1, 1).getDay(); // 0=日
+  const today       = new Date();
+  const firstDay    = new Date(y, m - 1, 1).getDay();
   const daysInMonth = new Date(y, m, 0).getDate();
-  const today = new Date();
 
-  // 空白セル
   for (let i = 0; i < firstDay; i++) {
-    grid.appendChild(Object.assign(document.createElement('div'), { className: 'cal-cell cal-empty' }));
+    const el = document.createElement('div');
+    el.className = 'cal-cell cal-empty';
+    grid.appendChild(el);
   }
 
-  // 日付セル
   for (let d = 1; d <= daysInMonth; d++) {
     const cell    = document.createElement('button');
-    const key     = dateKey(y, m, d);
-    const isToday = (y === today.getFullYear() && m === today.getMonth() + 1 && d === today.getDate());
+    const isToday = y === today.getFullYear() && m === today.getMonth() + 1 && d === today.getDate();
     const isPast  = new Date(y, m - 1, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const closed  = isClosed(y, m, d);
-    const avail   = closed ? 0 : getAvailable(y, m, d);
+    const avail   = (!closed && !isPast) ? getAvailable(y, m, d) : 0;
 
-    let statusClass = '';
-    let seatLabel   = '';
-
+    let cls = 'cal-cell ';
+    let seat = '';
     if (closed || isPast) {
-      statusClass = 'cal-closed';
-      seatLabel   = closed ? '休業' : '';
-      cell.disabled = true;
+      cls += 'cal-closed'; seat = closed ? '休業' : ''; cell.disabled = true;
     } else if (avail === 0) {
-      statusClass = 'cal-full';
-      seatLabel   = '満席';
-      cell.disabled = true;
+      cls += 'cal-full'; seat = '満席'; cell.disabled = true;
     } else if (avail <= CAL_CONFIG.warnThreshold) {
-      statusClass = 'cal-warn';
-      seatLabel   = `残${avail}`;
+      cls += 'cal-warn'; seat = `残${avail}`;
     } else {
-      statusClass = 'cal-open';
-      seatLabel   = `${avail}席`;
+      cls += 'cal-open'; seat = `${avail}席`;
     }
 
-    cell.className = `cal-cell ${statusClass}${isToday ? ' cal-today' : ''}`;
-    cell.innerHTML = `<span class="cal-day-num">${d}</span><span class="cal-day-seat">${seatLabel}</span>`;
-    cell.dataset.date  = key;
-    cell.dataset.avail = avail;
+    if (isToday) cls += ' cal-today';
+    cell.className   = cls;
+    cell.dataset.date = dateKey(y, m, d);
+    cell.innerHTML   = `<span class="cal-day-num">${d}</span><span class="cal-day-seat">${seat}</span>`;
 
     if (!cell.disabled) {
       cell.addEventListener('click', () => selectDate(y, m, d, avail));
     }
-
     grid.appendChild(cell);
   }
 }
 
+/* ═══════════════════════════════════════════
+ * 日付選択
+ * ═══════════════════════════════════════════ */
 function selectDate(y, m, d, avail) {
-  // 選択状態リセット
-  document.querySelectorAll('.cal-cell.cal-selected').forEach(el => el.classList.remove('cal-selected'));
-  const key  = dateKey(y, m, d);
-  const cell = document.querySelector(`.cal-cell[data-date="${key}"]`);
+  document.querySelectorAll('.cal-cell.cal-selected')
+    .forEach(el => el.classList.remove('cal-selected'));
+
+  const cell = document.querySelector(`.cal-cell[data-date="${dateKey(y, m, d)}"]`);
   if (cell) cell.classList.add('cal-selected');
 
-  // 下部情報パネル更新
-  const info      = document.getElementById('cal-selected-info');
-  const dateEl    = document.getElementById('cal-selected-date');
-  const seatsEl   = document.getElementById('cal-selected-seats');
-  const link      = document.getElementById('cal-reserve-link');
-  if (!info) return;
+  const dow   = DOW[new Date(y, m - 1, d).getDay()];
+  const label = `${y}年${m}月${d}日（${dow}）`;
 
-  const DOW = ['日', '月', '火', '水', '木', '金', '土'];
-  const dow  = DOW[new Date(y, m - 1, d).getDay()];
-  dateEl.textContent  = `${y}年${m}月${d}日（${dow}）`;
-  seatsEl.textContent = `空席 ${avail} 席 ／ 受付時間 17:00〜22:00`;
+  selectedDate = { y, m, d, avail, label };
 
-  const subject = encodeURIComponent(`ご予約のお問い合わせ（${y}年${m}月${d}日）`);
-  const body    = encodeURIComponent(`【ご希望日】${y}年${m}月${d}日\n【人数】\n【お名前】\n【お電話番号】\n【アレルギー等】`);
-  link.href     = `mailto:${CAL_CONFIG.contactEmail}?subject=${subject}&body=${body}`;
-
-  info.classList.remove('hidden');
+  document.getElementById('cal-selected-date').textContent  = label;
+  document.getElementById('cal-selected-seats').textContent = `空席 ${avail} 席　／　受付時間 18:00〜22:00`;
+  document.getElementById('cal-selected-info')?.classList.remove('hidden');
 }
 
-/* ─── モーダル開閉 ─── */
-function openModal() {
+/* ═══════════════════════════════════════════
+ * カレンダーモーダル開閉
+ * ═══════════════════════════════════════════ */
+function openCalModal() {
   const modal = document.getElementById('reserve-calendar-modal');
   const panel = modal?.querySelector('.cal-panel');
-  if (!modal) return;
-  modal.classList.remove('opacity-0', 'pointer-events-none');
+  modal?.classList.remove('opacity-0', 'pointer-events-none');
   panel?.classList.remove('translate-y-4');
   document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
+function closeCalModal() {
   const modal = document.getElementById('reserve-calendar-modal');
   const panel = modal?.querySelector('.cal-panel');
-  if (!modal) return;
-  modal.classList.add('opacity-0', 'pointer-events-none');
+  modal?.classList.add('opacity-0', 'pointer-events-none');
+  panel?.classList.add('translate-y-4');
+  if (!document.getElementById('reserve-form-modal')?.classList.contains('pointer-events-none')) return;
+  document.body.style.overflow = '';
+}
+
+/* ═══════════════════════════════════════════
+ * フォームモーダル開閉
+ * ═══════════════════════════════════════════ */
+function openFormModal() {
+  if (!selectedDate) return;
+
+  // カレンダーを隠す
+  closeCalModal();
+
+  // ヘッダーに日付セット
+  document.getElementById('rf-header-date').textContent   = selectedDate.label;
+  document.getElementById('rf-success-date').textContent  = selectedDate.label;
+
+  // フォームを初期状態にリセット
+  resetForm();
+
+  const modal = document.getElementById('reserve-form-modal');
+  const panel = modal?.querySelector('.rf-panel');
+  modal?.classList.remove('opacity-0', 'pointer-events-none');
+  panel?.classList.remove('translate-y-4');
+  document.body.style.overflow = 'hidden';
+
+  // 最上部にスクロール
+  panel?.scrollTo(0, 0);
+}
+
+function closeFormModal() {
+  const modal = document.getElementById('reserve-form-modal');
+  const panel = modal?.querySelector('.rf-panel');
+  modal?.classList.add('opacity-0', 'pointer-events-none');
   panel?.classList.add('translate-y-4');
   document.body.style.overflow = '';
 }
 
-/* ─── 初期化 ─── */
+function backToCalendar() {
+  closeFormModal();
+  setTimeout(openCalModal, 200);
+}
+
+/* ═══════════════════════════════════════════
+ * フォームリセット
+ * ═══════════════════════════════════════════ */
+function resetForm() {
+  const form = document.getElementById('reserve-form');
+  form?.reset();
+  form?.classList.remove('hidden');
+  document.getElementById('rf-loading')?.classList.add('hidden');
+  document.getElementById('rf-success')?.classList.add('hidden');
+  document.getElementById('rf-error-view')?.classList.add('hidden');
+
+  // バリデーションエラークリア
+  document.querySelectorAll('.rf-error').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.rf-invalid').forEach(el => el.classList.remove('rf-invalid'));
+}
+
+/* ═══════════════════════════════════════════
+ * バリデーション
+ * ═══════════════════════════════════════════ */
+function validateForm() {
+  let valid = true;
+
+  const fields = [
+    { id: 'rf-name',  msg: 'rf-name'  },
+    { id: 'rf-kana',  msg: 'rf-kana'  },
+    { id: 'rf-email', msg: 'rf-email' },
+    { id: 'rf-phone', msg: 'rf-phone' },
+    { id: 'rf-party', msg: 'rf-party' },
+  ];
+
+  fields.forEach(({ id }) => {
+    const input = document.getElementById(id);
+    const error = input?.nextElementSibling;
+    if (!input?.value.trim() || (id === 'rf-email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value))) {
+      input?.classList.add('rf-invalid');
+      error?.classList.remove('hidden');
+      valid = false;
+    } else {
+      input?.classList.remove('rf-invalid');
+      error?.classList.add('hidden');
+    }
+  });
+
+  // コース選択チェック
+  const courseChecked = document.querySelector('input[name="course_type"]:checked');
+  const courseError   = document.querySelector('.rf-error-course');
+  if (!courseChecked) {
+    courseError?.classList.remove('hidden');
+    valid = false;
+  } else {
+    courseError?.classList.add('hidden');
+  }
+
+  return valid;
+}
+
+/* ═══════════════════════════════════════════
+ * フォーム送信
+ * ═══════════════════════════════════════════ */
+async function submitReservation(e) {
+  e.preventDefault();
+  if (!validateForm()) return;
+
+  const form    = document.getElementById('reserve-form');
+  const loading = document.getElementById('rf-loading');
+  const success = document.getElementById('rf-success');
+  const errView = document.getElementById('rf-error-view');
+  const errMsg  = document.getElementById('rf-error-msg');
+
+  form.classList.add('hidden');
+  loading.classList.remove('hidden');
+
+  const data = {
+    reservation_date : dateKey(selectedDate.y, selectedDate.m, selectedDate.d),
+    name             : document.getElementById('rf-name').value.trim(),
+    kana             : document.getElementById('rf-kana').value.trim(),
+    email            : document.getElementById('rf-email').value.trim(),
+    phone            : document.getElementById('rf-phone').value.trim(),
+    party_size       : Number(document.getElementById('rf-party').value),
+    course_type      : document.querySelector('input[name="course_type"]:checked').value,
+    allergies        : document.getElementById('rf-allergies').value.trim(),
+    notes            : document.getElementById('rf-notes').value.trim(),
+  };
+
+  try {
+    // ── 現在はコンソール確認のみ（API実装後に差し替え）──
+    if (API_URL) {
+      const res = await fetch(`${API_URL}/reserve`, {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error(await res.text());
+    } else {
+      // API未設定時: 1秒待って成功扱い（開発用）
+      await new Promise(r => setTimeout(r, 1000));
+      console.log('[予約フォーム] 送信データ:', data);
+    }
+
+    loading.classList.add('hidden');
+    success.classList.remove('hidden');
+
+    // カレンダーのローカルデータも仮更新
+    const key = data.reservation_date;
+    reservationData[key] = (reservationData[key] ?? 0) + data.party_size;
+    renderCalendar(currentYear, currentMonth);
+
+  } catch (err) {
+    loading.classList.add('hidden');
+    errMsg.textContent = err.message || '通信エラーが発生しました。しばらく経ってから再度お試しください。';
+    errView.classList.remove('hidden');
+    console.error('[予約フォーム] エラー:', err);
+  }
+}
+
+/* ═══════════════════════════════════════════
+ * バッジ更新
+ * ═══════════════════════════════════════════ */
+function updateBadge(y, m) {
+  const dot  = document.getElementById('availability-dot');
+  const text = document.getElementById('availability-text');
+  if (!dot || !text) return;
+
+  const now  = new Date();
+  let availSum = 0;
+  const days = new Date(y, m, 0).getDate();
+  for (let d = 1; d <= days; d++) {
+    if (new Date(y, m - 1, d) <= now) continue;
+    if (isClosed(y, m, d)) continue;
+    availSum += getAvailable(y, m, d);
+  }
+
+  if (availSum === 0) {
+    dot.style.background = '#f87171';
+    dot.style.boxShadow  = '0 0 6px #f87171';
+    text.textContent     = '今月は満席です';
+    text.style.color     = '#f87171';
+  } else {
+    dot.style.background = '#34d399';
+    dot.style.boxShadow  = '0 0 6px #34d399';
+    text.textContent     = 'カレンダーで空席を確認';
+    text.style.color     = '';
+  }
+}
+
+/* ═══════════════════════════════════════════
+ * 初期化
+ * ═══════════════════════════════════════════ */
 async function init() {
-  // データ取得
   if (API_URL) {
     try {
       const res = await fetch(API_URL, { cache: 'no-store' });
-      const data = await res.json();
-      reservationData = data.reservations ?? {};
-    } catch {
-      reservationData = CAL_CONFIG.reservations;
-    }
+      reservationData = (await res.json()).reservations ?? {};
+    } catch { reservationData = CAL_CONFIG.reservations; }
   } else {
     reservationData = CAL_CONFIG.reservations;
   }
 
-  // 当月を表示
   const now = new Date();
   renderCalendar(now.getFullYear(), now.getMonth() + 1);
+  updateBadge(now.getFullYear(), now.getMonth() + 1);
 
-  // イベント
-  document.getElementById('open-calendar-btn')
-    ?.addEventListener('click', openModal);
-
-  document.getElementById('cal-close')
-    ?.addEventListener('click', closeModal);
-
-  document.getElementById('cal-backdrop')
-    ?.addEventListener('click', closeModal);
+  /* ── カレンダーモーダル ── */
+  document.getElementById('open-calendar-btn')?.addEventListener('click', openCalModal);
+  document.getElementById('cal-close')?.addEventListener('click', closeCalModal);
+  document.getElementById('cal-backdrop')?.addEventListener('click', closeCalModal);
 
   document.getElementById('cal-prev')?.addEventListener('click', () => {
     let m = currentMonth - 1, y = currentYear;
     if (m < 1) { m = 12; y--; }
     renderCalendar(y, m);
   });
-
   document.getElementById('cal-next')?.addEventListener('click', () => {
     let m = currentMonth + 1, y = currentYear;
     if (m > 12) { m = 1; y++; }
     renderCalendar(y, m);
   });
 
-  // ESCキーで閉じる
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
+  /* ── 「この日を予約する」→ フォームを開く ── */
+  document.getElementById('cal-to-form-btn')?.addEventListener('click', openFormModal);
+
+  /* ── フォームモーダル ── */
+  document.getElementById('form-backdrop')?.addEventListener('click', closeFormModal);
+  document.getElementById('rf-close-btn')?.addEventListener('click', closeFormModal);
+  document.getElementById('rf-back-btn')?.addEventListener('click', backToCalendar);
+  document.getElementById('reserve-form')?.addEventListener('submit', submitReservation);
+  document.getElementById('rf-done-btn')?.addEventListener('click', closeFormModal);
+  document.getElementById('rf-retry-btn')?.addEventListener('click', () => {
+    document.getElementById('rf-error-view')?.classList.add('hidden');
+    document.getElementById('reserve-form')?.classList.remove('hidden');
   });
 
-  // バッジ表示
-  updateBadge(now.getFullYear(), now.getMonth() + 1);
-}
-
-function updateBadge(y, m) {
-  const dot  = document.getElementById('availability-dot');
-  const text = document.getElementById('availability-text');
-  if (!dot || !text) return;
-
-  // 今月の残席合計（平均）
-  const now = new Date();
-  let openDays = 0, availableSum = 0;
-  const days = new Date(y, m, 0).getDate();
-  for (let d = 1; d <= days; d++) {
-    if (new Date(y, m - 1, d) < now) continue;
-    if (isClosed(y, m, d)) continue;
-    openDays++;
-    availableSum += getAvailable(y, m, d);
-  }
-
-  const hasAvail = availableSum > 0;
-  if (!hasAvail) {
-    dot.style.background = '#f87171';
-    dot.style.boxShadow  = '0 0 6px #f87171';
-    text.textContent = `今月は満席です`;
-    text.style.color = '#f87171';
-  } else {
-    text.textContent = `カレンダーで空席を確認`;
-    text.style.color = '';
-  }
+  /* ── ESC で閉じる ── */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (!document.getElementById('reserve-form-modal')?.classList.contains('pointer-events-none')) {
+      closeFormModal();
+    } else {
+      closeCalModal();
+    }
+  });
 }
 
 if (document.readyState === 'loading') {
