@@ -28,13 +28,14 @@ const CAL_CONFIG = {
   extraClosed: [],
 };
 
-const API_URL = null; // 将来: '/api/availability'
+const API_URL = 'https://johrztiitxndabamqwgi.supabase.co/functions/v1';
 
 /* ═══════════════════════════════════════════
  * 状態
  * ═══════════════════════════════════════════ */
 let currentYear, currentMonth, reservationData;
 let selectedDate = null; // { y, m, d, avail, label }
+const fetchedMonths = new Set(); // 取得済み月のキャッシュ
 
 /* ═══════════════════════════════════════════
  * ユーティリティ
@@ -53,6 +54,28 @@ function isClosed(y, m, d) {
 function getAvailable(y, m, d) {
   const booked = reservationData[dateKey(y, m, d)] ?? 0;
   return Math.max(0, CAL_CONFIG.totalSeats - booked);
+}
+
+/* API から指定月の空席データを取得してキャッシュに格納 */
+async function fetchMonthData(y, m) {
+  const monthKey = `${y}-${pad(m)}`;
+  if (fetchedMonths.has(monthKey)) return; // 取得済みはスキップ
+
+  try {
+    const res = await fetch(`${API_URL}/availability?month=${monthKey}`, {
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    // API形式 { available, total } → 予約済み人数（booked）に変換して格納
+    for (const [date, info] of Object.entries(data.dates ?? {})) {
+      reservationData[date] = info.total - info.available;
+    }
+    fetchedMonths.add(monthKey);
+  } catch (e) {
+    console.warn(`[availability] ${monthKey} 取得失敗（手動設定で代替）:`, e);
+  }
 }
 
 /* ═══════════════════════════════════════════
@@ -336,32 +359,39 @@ function updateBadge(y, m) {
  * 初期化
  * ═══════════════════════════════════════════ */
 async function init() {
-  if (API_URL) {
-    try {
-      const res = await fetch(API_URL, { cache: 'no-store' });
-      reservationData = (await res.json()).reservations ?? {};
-    } catch { reservationData = CAL_CONFIG.reservations; }
-  } else {
-    reservationData = CAL_CONFIG.reservations;
-  }
+  // 手動設定をベースに（API失敗時のフォールバック）
+  reservationData = { ...CAL_CONFIG.reservations };
 
   const now = new Date();
-  renderCalendar(now.getFullYear(), now.getMonth() + 1);
-  updateBadge(now.getFullYear(), now.getMonth() + 1);
+  const y   = now.getFullYear();
+  const m   = now.getMonth() + 1;
+
+  // 今月から3ヶ月分を並列取得
+  const fetches = [];
+  for (let i = 0; i < 3; i++) {
+    const dm = m + i;
+    fetches.push(fetchMonthData(dm > 12 ? y + 1 : y, dm > 12 ? dm - 12 : dm));
+  }
+  await Promise.all(fetches);
+
+  renderCalendar(y, m);
+  updateBadge(y, m);
 
   /* ── カレンダーモーダル ── */
   document.getElementById('open-calendar-btn')?.addEventListener('click', openCalModal);
   document.getElementById('cal-close')?.addEventListener('click', closeCalModal);
   document.getElementById('cal-backdrop')?.addEventListener('click', closeCalModal);
 
-  document.getElementById('cal-prev')?.addEventListener('click', () => {
+  document.getElementById('cal-prev')?.addEventListener('click', async () => {
     let m = currentMonth - 1, y = currentYear;
     if (m < 1) { m = 12; y--; }
+    await fetchMonthData(y, m);
     renderCalendar(y, m);
   });
-  document.getElementById('cal-next')?.addEventListener('click', () => {
+  document.getElementById('cal-next')?.addEventListener('click', async () => {
     let m = currentMonth + 1, y = currentYear;
     if (m > 12) { m = 1; y++; }
+    await fetchMonthData(y, m);
     renderCalendar(y, m);
   });
 
