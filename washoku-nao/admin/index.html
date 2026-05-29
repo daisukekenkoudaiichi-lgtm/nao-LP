@@ -382,9 +382,16 @@
   <div class="container">
     <div class="section-title">本日の予約</div>
     <div id="reservation-list"><div class="spinner"></div></div>
+
+    <div style="margin-top:24px">
+      <button class="btn-primary" id="add-phone-btn" style="display:flex;align-items:center;justify-content:center;gap:8px">
+        <span style="font-size:20px;line-height:1">＋</span>
+        電話予約を登録する
+      </button>
+    </div>
   </div>
 
-  <!-- 電話予約追加ボタン（FAB） -->
+  <!-- FAB（スクロール時用） -->
   <button class="fab" id="fab-btn" title="電話予約を追加">＋</button>
 </div>
 
@@ -620,10 +627,12 @@ async function loadDashboard() {
 /* ══════════════════════
    電話予約フォーム
 ══════════════════════ */
-document.getElementById('fab-btn').addEventListener('click', () => {
+function openPhoneForm() {
   resetForm();
   showPage('page-form');
-});
+}
+document.getElementById('fab-btn').addEventListener('click', openPhoneForm);
+document.getElementById('add-phone-btn').addEventListener('click', openPhoneForm);
 document.getElementById('form-back-btn').addEventListener('click', async () => {
   await loadDashboard();
   showPage('page-dashboard');

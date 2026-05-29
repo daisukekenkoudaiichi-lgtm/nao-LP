@@ -146,12 +146,25 @@ function selectDate(y, m, d, avail) {
 /* ═══════════════════════════════════════════
  * カレンダーモーダル開閉
  * ═══════════════════════════════════════════ */
-function openCalModal() {
+async function openCalModal() {
   const modal = document.getElementById('reserve-calendar-modal');
   const panel = modal?.querySelector('.cal-panel');
   modal?.classList.remove('opacity-0', 'pointer-events-none');
   panel?.classList.remove('translate-y-4');
   document.body.style.overflow = 'hidden';
+
+  // 開くたびに今月・来月のキャッシュをクリアして最新データを取得
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth() + 1;
+  const next = m < 12 ? m + 1 : 1;
+  const nextY = m < 12 ? y : y + 1;
+  fetchedMonths.delete(`${y}-${pad(m)}`);
+  fetchedMonths.delete(`${nextY}-${pad(next)}`);
+  await Promise.all([
+    fetchMonthData(y, m),
+    fetchMonthData(nextY, next),
+  ]);
+  renderCalendar(currentYear, currentMonth);
 }
 
 function closeCalModal() {
