@@ -14,15 +14,7 @@ const CAL_CONFIG = {
   contactEmail  : 'info@washoku-nao.jp',
 
   reservations: {
-    '2026-05-29': 10,
-    '2026-05-30': 10,
-    '2026-05-31': 10,
-    '2026-06-03': 8,
-    '2026-06-05': 10,
-    '2026-06-10': 7,
-    '2026-06-12': 10,
-    '2026-06-17': 6,
-    '2026-06-19': 10,
+    // API接続後はDBから自動取得 / ここはAPI障害時のフォールバック用
   },
 
   extraClosed: [],
@@ -366,9 +358,9 @@ async function init() {
   const y   = now.getFullYear();
   const m   = now.getMonth() + 1;
 
-  // 今月から3ヶ月分を並列取得
+  // 今月から6ヶ月分を並列取得
   const fetches = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 6; i++) {
     const dm = m + i;
     fetches.push(fetchMonthData(dm > 12 ? y + 1 : y, dm > 12 ? dm - 12 : dm));
   }
@@ -379,6 +371,7 @@ async function init() {
 
   /* ── カレンダーモーダル ── */
   document.getElementById('open-calendar-btn')?.addEventListener('click', openCalModal);
+  document.getElementById('cta-reserve-btn')?.addEventListener('click', openCalModal);
   document.getElementById('cal-close')?.addEventListener('click', closeCalModal);
   document.getElementById('cal-backdrop')?.addEventListener('click', closeCalModal);
 

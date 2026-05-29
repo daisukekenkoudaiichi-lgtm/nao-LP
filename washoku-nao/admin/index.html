@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>和食 直 — 管理画面</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold:   #c9a86a;
+    --gold2:  #8a6b2a;
+    --ink:    #0a0807;
+    --ink2:   #0e0c0a;
+    --ink3:   #1a1410;
+    --cream:  #f4ece0;
+    --mute:   #6a5836;
+    --red:    #f87171;
+    --green:  #34d399;
+    --amber:  #fbbf24;
+  }
+
+  html, body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── ページ切り替え ── */
+  .page { display: none !important; }
+  #page-login.active    { display: flex  !important; }
+  #page-dashboard.active { display: block !important; }
+  #page-form.active     { display: block !important; }
+
+  /* ── 共通 ── */
+  .container { max-width: 480px; margin: 0 auto; padding: 0 16px 80px; }
+
+  header.admin-header {
+    background: var(--ink2);
+    border-bottom: 1px solid rgba(201,168,106,.2);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .admin-header .title {
+    font-size: 15px;
+    letter-spacing: .08em;
+    color: var(--gold);
+  }
+  .admin-header .logout-btn {
+    font-size: 12px;
+    color: var(--mute);
+    background: none;
+    border: 1px solid rgba(106,88,54,.4);
+    padding: 5px 12px;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .admin-header .logout-btn:active { opacity: .7; }
+
+  /* ── ログインページ ── */
+  #page-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .login-box {
+    width: 100%;
+    max-width: 360px;
+    background: var(--ink2);
+    border: 1px solid rgba(201,168,106,.25);
+    padding: 32px 24px;
+  }
+  .login-logo {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .login-logo .ja { font-size: 26px; letter-spacing: .1em; }
+  .login-logo .gold { color: var(--gold); }
+  .login-logo .sub { font-size: 11px; color: var(--mute); letter-spacing: .15em; margin-top: 4px; }
+
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: .1em;
+    margin-bottom: 7px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(74,62,42,.7);
+    color: var(--cream);
+    font-size: 15px;
+    padding: 8px 0;
+    outline: none;
+    font-family: inherit;
+    transition: border-color .2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-bottom-color: var(--gold);
+  }
+  .field input::placeholder, .field textarea::placeholder { color: #3a3228; }
+  .field select option { background: var(--ink3); }
+  .field textarea { resize: none; min-height: 60px; }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(180deg,#efdba8 0%,#d2b074 42%,#b58f4e 100%);
+    color: #1a1310;
+    border: none;
+    padding: 14px;
+    font-size: 14px;
+    font-family: inherit;
+    letter-spacing: .1em;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity .2s;
+  }
+  .btn-primary:active { opacity: .85; }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid rgba(201,168,106,.3);
+    padding: 12px 20px;
+    font-size: 13px;
+    font-family: inherit;
+    letter-spacing: .08em;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); }
+
+  .error-msg {
+    color: var(--red);
+    font-size: 12px;
+    margin-top: 12px;
+    text-align: center;
+    min-height: 20px;
+  }
+
+  /* ── ダッシュボード ── */
+  .date-bar {
+    background: var(--ink3);
+    border-bottom: 1px solid rgba(201,168,106,.15);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .date-bar .date-label { font-size: 14px; letter-spacing: .06em; }
+  .date-bar .summary {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: .06em;
+  }
+
+  .section-title {
+    font-size: 11px;
+    color: var(--mute);
+    letter-spacing: .15em;
+    padding: 20px 0 10px;
+    border-bottom: 1px solid rgba(74,62,42,.3);
+    margin-bottom: 12px;
+  }
+
+  .reservation-card {
+    background: var(--ink2);
+    border: 1px solid rgba(74,62,42,.4);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .reservation-card .rc-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .reservation-card .rc-name {
+    font-size: 16px;
+    letter-spacing: .06em;
+  }
+  .reservation-card .rc-party {
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: .06em;
+  }
+  .reservation-card .rc-course {
+    font-size: 12px;
+    color: rgba(244,236,224,.6);
+    margin-bottom: 4px;
+  }
+  .reservation-card .rc-allergy {
+    font-size: 12px;
+    color: var(--red);
+    font-weight: 600;
+  }
+  .reservation-card .rc-note {
+    font-size: 12px;
+    color: rgba(244,236,224,.5);
+  }
+  .reservation-card .rc-source {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 10px;
+    letter-spacing: .08em;
+    padding: 2px 7px;
+    border: 1px solid;
+  }
+  .rc-source.web   { color: var(--green); border-color: rgba(52,211,153,.3); }
+  .rc-source.phone { color: var(--amber); border-color: rgba(251,191,36,.3); }
+
+  .empty-state {
+    text-align: center;
+    color: var(--mute);
+    font-size: 14px;
+    padding: 40px 0;
+    letter-spacing: .06em;
+  }
+
+  .fab {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    background: linear-gradient(180deg,#efdba8 0%,#d2b074 42%,#b58f4e 100%);
+    color: #1a1310;
+    border: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 28px;
+    line-height: 56px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,.5);
+    z-index: 90;
+  }
+
+  /* ── 電話予約フォーム ── */
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--mute);
+    font-size: 13px;
+    letter-spacing: .06em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .back-btn svg { width: 16px; height: 16px; }
+
+  /* 人数ボタングリッド */
+  .party-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .party-btn {
+    background: transparent;
+    border: 1px solid rgba(74,62,42,.5);
+    color: var(--cream);
+    padding: 10px 0;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .party-btn.selected {
+    background: rgba(201,168,106,.15);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* コースラジオ */
+  .course-option { display: none; }
+  .course-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgba(74,62,42,.5);
+    padding: 12px 14px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: border-color .15s, background .15s;
+  }
+  .course-option:checked + .course-label {
+    border-color: var(--gold);
+    background: rgba(201,168,106,.08);
+  }
+  .course-label .cn { font-size: 14px; }
+  .course-label .cp { font-size: 12px; color: var(--gold); }
+
+  /* スピナー */
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid rgba(201,168,106,.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 30px auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink3);
+    border: 1px solid rgba(201,168,106,.3);
+    color: var(--cream);
+    font-size: 13px;
+    padding: 10px 20px;
+    letter-spacing: .06em;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity .3s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════
+     ログインページ
+══════════════════════════ -->
+<div id="page-login" class="page active">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="ja">和食 <span class="gold">直</span></div>
+      <div class="sub">ADMIN</div>
+    </div>
+    <div class="field">
+      <label>メールアドレス</label>
+      <input id="login-email" type="email" autocomplete="email" placeholder="owner@example.com">
+    </div>
+    <div class="field">
+      <label>パスワード</label>
+      <input id="login-pass" type="password" autocomplete="current-password" placeholder="••••••••">
+    </div>
+    <button class="btn-primary" id="login-btn">ログイン</button>
+    <div class="error-msg" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════
+     ダッシュボード
+══════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <header class="admin-header">
+    <span class="title">和食 直 — 管理</span>
+    <button class="logout-btn" id="logout-btn">ログアウト</button>
+  </header>
+
+  <div class="date-bar">
+    <span class="date-label" id="today-label"></span>
+    <span class="summary" id="today-summary"></span>
+  </div>
+
+  <div class="container">
+    <div class="section-title">本日の予約</div>
+    <div id="reservation-list"><div class="spinner"></div></div>
+  </div>
+
+  <!-- 電話予約追加ボタン（FAB） -->
+  <button class="fab" id="fab-btn" title="電話予約を追加">＋</button>
+</div>
+
+<!-- ══════════════════════════
+     電話予約入力フォーム
+══════════════════════════ -->
+<div id="page-form" class="page">
+  <header class="admin-header">
+    <button class="back-btn" id="form-back-btn">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 4L6 10l6 6"/>
+      </svg>
+      戻る
+    </button>
+    <span class="title">電話予約登録</span>
+    <span></span>
+  </header>
+
+  <div class="container" style="padding-top:20px">
+    <div class="field">
+      <label>予約日 *</label>
+      <input id="f-date" type="date">
+    </div>
+    <div class="field">
+      <label>お名前 *</label>
+      <input id="f-name" type="text" placeholder="山田 花子">
+    </div>
+    <div class="field">
+      <label>ふりがな</label>
+      <input id="f-kana" type="text" placeholder="やまだ はなこ">
+    </div>
+    <div class="field">
+      <label>電話番号 *</label>
+      <input id="f-phone" type="tel" placeholder="090-0000-0000">
+    </div>
+    <div class="field">
+      <label>人数 *</label>
+      <div class="party-grid" id="party-grid">
+        <button class="party-btn" data-v="1">1名</button>
+        <button class="party-btn" data-v="2">2名</button>
+        <button class="party-btn" data-v="3">3名</button>
+        <button class="party-btn" data-v="4">4名</button>
+        <button class="party-btn" data-v="5">5名</button>
+        <button class="party-btn" data-v="6">6名</button>
+        <button class="party-btn" data-v="7">7名</button>
+        <button class="party-btn" data-v="8">8名</button>
+      </div>
+    </div>
+    <div class="field" style="margin-top:18px">
+      <label>コース *</label>
+      <div style="margin-top:8px">
+        <input class="course-option" type="radio" name="course" id="c-half"      value="half">
+        <label class="course-label" for="c-half">
+          <span class="cn">特別ハーフコース</span>
+          <span class="cp">¥6,500</span>
+        </label>
+        <input class="course-option" type="radio" name="course" id="c-omakase"   value="omakase">
+        <label class="course-label" for="c-omakase">
+          <span class="cn">店主のおまかせコース</span>
+          <span class="cp">¥10,000</span>
+        </label>
+        <input class="course-option" type="radio" name="course" id="c-selection" value="selection">
+        <label class="course-label" for="c-selection">
+          <span class="cn">店主の厳選コース</span>
+          <span class="cp">¥12,000</span>
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <label>アレルギー・備考</label>
+      <textarea id="f-notes" placeholder="えび、かに など" rows="3"></textarea>
+    </div>
+
+    <div style="margin-top:8px">
+      <button class="btn-primary" id="form-submit-btn">予約を登録する</button>
+      <div class="error-msg" id="form-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- トースト通知 -->
+<div class="toast" id="toast"></div>
+
+<!-- Supabase JS -->
+<script src="supabase.js"></script>
+<script>
+const SUPABASE_URL  = 'https://johrztiitxndabamqwgi.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvaHJ6dGlpdHhuZGFiYW1xd2dpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NzUwNTksImV4cCI6MjA5NTU1MTA1OX0.baPOfNCMfLvXDl17IleOHvB4EdvwQfBnjy0KQUUPHG0';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: {
+    storage: window.sessionStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+  }
+});
+
+const DOW = ['日','月','火','水','木','金','土'];
+let selectedParty = null;
+
+/* ── ページ切り替え ── */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ── トースト ── */
+function toast(msg, duration = 2500) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
+
+/* ── 日付フォーマット ── */
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00+09:00');
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${DOW[d.getDay()]}）`;
+}
+function todayStr() {
+  return new Date().toLocaleDateString('sv', { timeZone: 'Asia/Tokyo' });
+}
+
+/* ── コース名 ── */
+const COURSE = {
+  half      : '特別ハーフコース',
+  omakase   : 'おまかせコース',
+  selection : '厳選コース',
+};
+
+/* ══════════════════════
+   認証
+══════════════════════ */
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showPage('page-dashboard');
+    loadDashboard();
+  } else {
+    showPage('page-login');
+  }
+}
+
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  const btn   = document.getElementById('login-btn');
+
+  errEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'ログイン中...';
+
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+  btn.disabled = false;
+  btn.textContent = 'ログイン';
+
+  if (error) {
+    errEl.textContent = 'メールアドレスまたはパスワードが正しくありません';
+    return;
+  }
+  // まず画面を切り替えてからデータ読み込み
+  showPage('page-dashboard');
+  loadDashboard();
+});
+
+// Enter キーでログイン
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+});
+
+document.getElementById('logout-btn').addEventListener('click', async () => {
+  await sb.auth.signOut();
+  showPage('page-login');
+});
+
+/* ══════════════════════
+   ダッシュボード
+══════════════════════ */
+async function loadDashboard() {
+  const today = todayStr();
+
+  // ヘッダーの日付
+  document.getElementById('today-label').textContent = formatDate(today);
+
+  const listEl = document.getElementById('reservation-list');
+  listEl.innerHTML = '<div class="spinner"></div>';
+
+  const { data, error } = await sb
+    .from('reservations')
+    .select(`
+      id, reservation_date, party_size, course_type,
+      allergies, notes, source, status,
+      customers ( name, phone )
+    `)
+    .eq('reservation_date', today)
+    .eq('status', 'confirmed')
+    .order('id');
+
+  if (error) {
+    listEl.innerHTML = '<div class="empty-state">データ取得に失敗しました</div>';
+    return;
+  }
+
+  // サマリー
+  const total = data.reduce((s, r) => s + r.party_size, 0);
+  document.getElementById('today-summary').textContent =
+    data.length ? `${data.length}組 ${total}名様` : '本日の予約なし';
+
+  if (!data.length) {
+    listEl.innerHTML = '<div class="empty-state">本日の予約はありません</div>';
+    return;
+  }
+
+  listEl.innerHTML = data.map((r, i) => `
+    <div class="reservation-card">
+      <span class="rc-source ${r.source}">${r.source === 'web' ? 'WEB' : 'TEL'}</span>
+      <div class="rc-header">
+        <span class="rc-name">${i+1}. ${r.customers?.name ?? '—'}</span>
+        <span class="rc-party">${r.party_size}名様</span>
+      </div>
+      <div class="rc-course">${COURSE[r.course_type] ?? r.course_type}</div>
+      ${r.allergies ? `<div class="rc-allergy">⚠ ${r.allergies}</div>` : ''}
+      ${r.notes     ? `<div class="rc-note">${r.notes}</div>` : ''}
+      ${r.customers?.phone ? `<div class="rc-note" style="margin-top:4px;color:var(--mute)">📞 ${r.customers.phone}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════
+   電話予約フォーム
+══════════════════════ */
+document.getElementById('fab-btn').addEventListener('click', () => {
+  resetForm();
+  showPage('page-form');
+});
+document.getElementById('form-back-btn').addEventListener('click', async () => {
+  await loadDashboard();
+  showPage('page-dashboard');
+});
+
+// 人数ボタン
+document.getElementById('party-grid').addEventListener('click', e => {
+  const btn = e.target.closest('.party-btn');
+  if (!btn) return;
+  document.querySelectorAll('.party-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedParty = Number(btn.dataset.v);
+});
+
+function resetForm() {
+  document.getElementById('f-date').value  = todayStr();
+  document.getElementById('f-name').value  = '';
+  document.getElementById('f-kana').value  = '';
+  document.getElementById('f-phone').value = '';
+  document.getElementById('f-notes').value = '';
+  document.querySelectorAll('.party-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.course-option').forEach(r => r.checked = false);
+  document.getElementById('form-error').textContent = '';
+  selectedParty = null;
+}
+
+document.getElementById('form-submit-btn').addEventListener('click', async () => {
+  const date   = document.getElementById('f-date').value;
+  const name   = document.getElementById('f-name').value.trim();
+  const kana   = document.getElementById('f-kana').value.trim();
+  const phone  = document.getElementById('f-phone').value.trim();
+  const notes  = document.getElementById('f-notes').value.trim();
+  const course = document.querySelector('.course-option:checked')?.value;
+  const errEl  = document.getElementById('form-error');
+  const btn    = document.getElementById('form-submit-btn');
+
+  // バリデーション
+  if (!date || !name || !phone || !selectedParty || !course) {
+    errEl.textContent = '※ 必須項目（日付・名前・電話・人数・コース）を入力してください';
+    return;
+  }
+  errEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = '登録中...';
+
+  try {
+    // 顧客 UPSERT（電話番号で識別）
+    const { data: customer, error: cErr } = await sb
+      .from('customers')
+      .upsert({ phone, name }, { onConflict: 'phone' })
+      .select()
+      .single();
+    if (cErr) throw cErr;
+
+    // 予約 INSERT
+    const { error: rErr } = await sb
+      .from('reservations')
+      .insert({
+        customer_id      : customer.id,
+        reservation_date : date,
+        party_size       : selectedParty,
+        course_type      : course,
+        notes            : notes || null,
+        status           : 'confirmed',
+        source           : 'phone',
+      });
+    if (rErr) throw rErr;
+
+    toast('✅ 予約を登録しました');
+    await loadDashboard();
+    showPage('page-dashboard');
+
+  } catch (err) {
+    errEl.textContent = `エラー: ${err.message}`;
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '予約を登録する';
+  }
+});
+
+/* ── 初期化 ── */
+checkSession();
+</script>
+</body>
+</html>
