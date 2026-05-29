@@ -333,24 +333,28 @@ async function submitReservation(e) {
 /* ═══════════════════════════════════════════
  * バッジ更新
  * ═══════════════════════════════════════════ */
-function updateBadge(y, m) {
+function updateBadge() {
   const dot  = document.getElementById('availability-dot');
   const text = document.getElementById('availability-text');
   if (!dot || !text) return;
 
-  const now  = new Date();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   let availSum = 0;
-  const days = new Date(y, m, 0).getDate();
-  for (let d = 1; d <= days; d++) {
-    if (new Date(y, m - 1, d) <= now) continue;
-    if (isClosed(y, m, d)) continue;
-    availSum += getAvailable(y, m, d);
+
+  // 今日から30日先までチェック
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    const y = d.getFullYear(), m = d.getMonth() + 1, dd = d.getDate();
+    if (isClosed(y, m, dd)) continue;
+    availSum += getAvailable(y, m, dd);
   }
 
   if (availSum === 0) {
     dot.style.background = '#f87171';
     dot.style.boxShadow  = '0 0 6px #f87171';
-    text.textContent     = '今月は満席です';
+    text.textContent     = '近日満席です';
     text.style.color     = '#f87171';
   } else {
     dot.style.background = '#34d399';
@@ -380,7 +384,7 @@ async function init() {
   await Promise.all(fetches);
 
   renderCalendar(y, m);
-  updateBadge(y, m);
+  updateBadge();
 
   /* ── カレンダーモーダル ── */
   document.getElementById('open-calendar-btn')?.addEventListener('click', openCalModal);

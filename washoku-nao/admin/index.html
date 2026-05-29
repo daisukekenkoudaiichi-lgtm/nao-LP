@@ -216,14 +216,12 @@
     font-size: 12px;
     color: rgba(244,236,224,.5);
   }
-  .reservation-card .rc-source {
-    position: absolute;
-    top: 10px;
-    right: 12px;
+  .rc-source {
     font-size: 10px;
     letter-spacing: .08em;
     padding: 2px 7px;
     border: 1px solid;
+    white-space: nowrap;
   }
   .rc-source.web   { color: var(--green); border-color: rgba(52,211,153,.3); }
   .rc-source.phone { color: var(--amber); border-color: rgba(251,191,36,.3); }
@@ -611,10 +609,12 @@ async function loadDashboard() {
 
   listEl.innerHTML = data.map((r, i) => `
     <div class="reservation-card">
-      <span class="rc-source ${r.source}">${r.source === 'web' ? 'WEB' : 'TEL'}</span>
       <div class="rc-header">
         <span class="rc-name">${i+1}. ${r.customers?.name ?? '—'}</span>
-        <span class="rc-party">${r.party_size}名様</span>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <span class="rc-party">${r.party_size}名様</span>
+          <span class="rc-source ${r.source}">${r.source === 'web' ? 'WEB' : 'TEL'}</span>
+        </div>
       </div>
       <div class="rc-course">${COURSE[r.course_type] ?? r.course_type}</div>
       ${r.allergies ? `<div class="rc-allergy">⚠ ${r.allergies}</div>` : ''}
