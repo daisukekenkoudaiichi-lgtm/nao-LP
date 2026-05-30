@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "washoku-nao",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
