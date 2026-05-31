@@ -138,6 +138,9 @@ function selectDate(y, m, d, avail) {
 
   selectedDate = { y, m, d, avail, label };
 
+  // Analytics: 日付を選択した
+  if (typeof gtag !== 'undefined') gtag('event', 'date_selected', { event_category: 'reservation', date: dateKey(y, m, d), available_seats: avail });
+
   document.getElementById('cal-selected-date').textContent  = label;
   document.getElementById('cal-selected-seats').textContent = `空席 ${avail} 席　／　受付時間 18:00〜22:00`;
   document.getElementById('cal-selected-info')?.classList.remove('hidden');
@@ -152,6 +155,9 @@ async function openCalModal() {
   modal?.classList.remove('opacity-0', 'pointer-events-none');
   panel?.classList.remove('translate-y-4');
   document.body.style.overflow = 'hidden';
+
+  // Analytics: カレンダーを開いた
+  if (typeof gtag !== 'undefined') gtag('event', 'calendar_open', { event_category: 'reservation' });
 
   // 開くたびに今月・来月のキャッシュをクリアして最新データを取得
   const now = new Date();
@@ -181,6 +187,9 @@ function closeCalModal() {
  * ═══════════════════════════════════════════ */
 function openFormModal() {
   if (!selectedDate) return;
+
+  // Analytics: 予約フォームを開いた
+  if (typeof gtag !== 'undefined') gtag('event', 'form_open', { event_category: 'reservation', date: dateKey(selectedDate.y, selectedDate.m, selectedDate.d) });
 
   // カレンダーを隠す
   closeCalModal();
@@ -317,6 +326,16 @@ async function submitReservation(e) {
     loading.classList.add('hidden');
     success.classList.remove('hidden');
 
+    // Analytics: 予約完了
+    const prices = { half: 6500, omakase: 10000, selection: 12000 };
+    if (typeof gtag !== 'undefined') gtag('event', 'reservation_complete', {
+      event_category : 'reservation',
+      course_type    : data.course_type,
+      party_size     : data.party_size,
+      value          : (prices[data.course_type] || 0) * data.party_size,
+      currency       : 'JPY',
+    });
+
     // カレンダーのローカルデータも仮更新
     const key = data.reservation_date;
     reservationData[key] = (reservationData[key] ?? 0) + data.party_size;
@@ -324,9 +343,23 @@ async function submitReservation(e) {
 
   } catch (err) {
     loading.classList.add('hidden');
-    errMsg.textContent = err.message || '通信エラーが発生しました。しばらく経ってから再度お試しください。';
-    errView.classList.remove('hidden');
     console.error('[予約フォーム] エラー:', err);
+
+    // サーバーエラー・通信エラーの場合は電話案内ポップアップを表示
+    const isServerError = !err.message
+      || err.message.includes('500')
+      || err.message.includes('fetch')
+      || err.message.includes('network')
+      || err.message.includes('NetworkError')
+      || err.message.includes('サーバーエラー');
+
+    if (isServerError) {
+      closeFormModal();
+      document.getElementById('server-error-modal')?.classList.remove('hidden');
+    } else {
+      errMsg.textContent = err.message || '通信エラーが発生しました。しばらく経ってから再度お試しください。';
+      errView.classList.remove('hidden');
+    }
   }
 }
 

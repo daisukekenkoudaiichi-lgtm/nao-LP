@@ -13,6 +13,15 @@
 
   <link rel="stylesheet" href="css/variables.css">
 <link rel="stylesheet" href="css/style.css">
+
+<!-- Firebase Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CDRCXP71DY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-CDRCXP71DY');
+</script>
 </head>
 <body class="bg-ink text-cream font-ja antialiased overflow-x-clip">
 
@@ -676,7 +685,7 @@
                       <svg class="text-gold shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1">
                         <path d="M3 2.5c-.2 0-.4.1-.5.3L1.6 4.4C1 5.6 1.4 7.3 2.8 9.2c1.4 1.8 3 3.2 4.4 3.8 1.3.6 2.6.4 3.2-.3l1-1.2c.3-.3.2-.8-.1-1l-1.7-1.1c-.3-.2-.7-.1-.9.1l-.6.7c-.2.2-.5.3-.8.1C6.5 9.6 5.5 8.7 4.8 7.7 4.1 6.8 3.9 5.9 4.1 5.6l.6-.7c.2-.2.2-.6 0-.9L3.6 2.7c-.2-.1-.4-.2-.6-.2z"/>
                       </svg>
-                      <a href="tel:0154640222" class="font-cin text-lg sm:text-[22px] text-cream tracking-wider break-all hover:text-gold transition-colors">0154-64-0222</a>
+                      <a href="tel:0154640222" class="font-cin text-lg sm:text-[22px] text-cream tracking-wider break-all hover:text-gold transition-colors" onclick="gtag('event','phone_tap',{event_category:'contact'})">0154-64-0222</a>
                     </div>
                     <div class="mt-1 text-mute text-[11px] tracking-widest2" data-i18n="reserve_phone_hours">受付時間 17:00〜22:00</div>
                   </div>
@@ -697,6 +706,29 @@
 
     </div>
   </section>
+
+  <!-- SERVER ERROR MODAL ============================== -->
+  <div id="server-error-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-5">
+    <div class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
+    <div class="relative bg-[#0d0b09] border border-gold/30 p-8 max-w-sm w-full text-center">
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+      <svg class="mx-auto mb-4 text-amber-400" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M20 6L36 34H4L20 6z"/><line x1="20" y1="16" x2="20" y2="25"/><circle cx="20" cy="29" r="1" fill="currentColor"/>
+      </svg>
+      <p class="font-ja text-[15px] leading-[2] tracking-wider text-cream/90">
+        現在サーバーエラーとなっております。<br>
+        大変申し訳ございませんが、<br>お電話でのご予約をお願いいたします。
+      </p>
+      <a href="tel:0154640222" class="block mt-6 font-cin text-[22px] text-gold tracking-wider hover:text-cream transition-colors">
+        0154-64-0222
+      </a>
+      <p class="text-mute text-[12px] mt-1 tracking-wider">受付時間 17:00〜22:00</p>
+      <button onclick="document.getElementById('server-error-modal').classList.add('hidden')" class="mt-6 text-mute text-[11px] tracking-widest2 underline">閉じる</button>
+    </div>
+  </div>
 
   <!-- RESERVATION CALENDAR MODAL ===================== -->
   <div id="reserve-calendar-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" role="dialog" aria-modal="true" aria-label="予約カレンダー">
@@ -891,6 +923,7 @@
           <p data-i18n="rf_notice_1">※ 完全予約制です。ご予約確認後、担当よりご連絡いたします。</p>
           <p class="mt-1" data-i18n="rf_notice_2">※ キャンセルは前日18時までにお電話にてお願いいたします。</p>
           <p class="mt-1" data-i18n="rf_notice_3">※ サービス料として別途10%を頂戴いたします。</p>
+          <p class="mt-1">※ ご入力いただいた個人情報は予約管理の目的のみに使用します。</p>
         </div>
 
         <!-- 送信ボタン -->
@@ -991,148 +1024,6 @@
   </footer>
 </main>
 
-<!-- RESERVATION MODAL (mock UI) -->
-<div id="reserveModal" class="reserve-modal-root fixed inset-0 z-[190] hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reserveModalTitle">
-  <div id="reserveModalBackdrop" class="reserve-modal-backdrop absolute inset-0 bg-black/65 backdrop-blur-md" aria-hidden="true"></div>
-  <div class="relative z-10 flex min-h-full items-center justify-center p-3 sm:p-5 md:p-10 pt-[max(0.75rem,env(safe-area-inset-top,0px))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] pointer-events-none">
-    <div id="reserveModalPanel" class="reserve-modal-panel pointer-events-auto relative w-full max-w-lg border border-gold/25 bg-[#0d0b09] shadow-[0_32px_80px_-24px_rgba(0,0,0,0.85)] noise">
-      <button type="button" id="reserveModalClose" class="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 z-20 flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-sm border border-gold/35 bg-ink2 text-cream/90 transition-colors hover:bg-ink3 hover:text-gold hover:border-gold/50" aria-label="閉じる">
-        <span class="font-cin text-xl leading-none tracking-widest">×</span>
-      </button>
-      <div class="reserve-modal-scroll max-h-[min(92dvh,52rem)] overflow-y-auto overscroll-contain px-5 py-8 pt-14 sm:px-8 sm:py-10 sm:pt-16 md:px-12 md:py-12 md:pt-14">
-        <div class="flex items-center gap-4">
-          <span class="font-cin text-[10px] tracking-widest2 text-gold/80">RESERVATION</span>
-          <span class="hairline h-px flex-1"></span>
-        </div>
-        <h2 id="reserveModalTitle" class="gold-foil font-ja display-lg mt-4 leading-snug">ご予約</h2>
-        <p class="mt-3 text-cream/65 text-[13px] tracking-wider leading-relaxed">ご希望の日時とコースをお選びください。（現在は入力画面のプレビューです）</p>
-        <div class="mt-8 flex items-center gap-3 text-[11px] tracking-widest2 font-cin text-mute">
-          <span id="reserveStepDot1" class="text-gold">01</span>
-          <span class="text-gold/30">—</span>
-          <span id="reserveStepDot2" class="text-mute">02</span>
-          <span class="text-gold/30">—</span>
-          <span id="reserveStepDot3" class="text-mute">03</span>
-        </div>
-
-        <div class="reserve-steps-wrap relative mt-8">
-          <!-- Step 1 -->
-          <div class="reserve-step-pane is-active" data-reserve-step="1">
-            <div class="space-y-6">
-              <label class="block">
-                <span class="mb-2 block font-ja text-[12px] tracking-widest2 text-gold/85">ご来店日</span>
-                <input type="date" id="reserveDate" class="reserve-field w-full border border-gold/25 bg-ink2 px-4 py-3.5 text-[15px] text-cream tracking-wide outline-none transition-[border-color,box-shadow] focus:border-gold/55 focus:ring-1 focus:ring-gold/30">
-              </label>
-              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <label class="block">
-                  <span class="mb-2 block font-ja text-[12px] tracking-widest2 text-gold/85">お時間</span>
-                  <div class="relative">
-                    <select id="reserveTime" class="reserve-field reserve-select w-full appearance-none border border-gold/25 bg-ink2 px-4 py-3.5 pr-10 text-[14px] text-cream tracking-wide outline-none transition-[border-color,box-shadow] focus:border-gold/55 focus:ring-1 focus:ring-gold/30">
-                      <option value="">選択してください</option>
-                      <option>17:00</option>
-                      <option>17:30</option>
-                      <option>18:00</option>
-                      <option>18:30</option>
-                      <option>19:00</option>
-                      <option>19:30</option>
-                      <option>20:00</option>
-                      <option>20:30</option>
-                      <option>21:00</option>
-                      <option>21:30</option>
-                    </select>
-                    <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gold/60 font-cin text-[10px]">▼</span>
-                  </div>
-                </label>
-                <label class="block">
-                  <span class="mb-2 block font-ja text-[12px] tracking-widest2 text-gold/85">お人数</span>
-                  <div class="relative">
-                    <select id="reserveGuests" class="reserve-field reserve-select w-full appearance-none border border-gold/25 bg-ink2 px-4 py-3.5 pr-10 text-[14px] text-cream tracking-wide outline-none transition-[border-color,box-shadow] focus:border-gold/55 focus:ring-1 focus:ring-gold/30">
-                      <option value="">選択してください</option>
-                      <option>1名</option>
-                      <option>2名</option>
-                      <option>3名</option>
-                      <option>4名</option>
-                      <option>5名</option>
-                      <option>6名</option>
-                      <option>7名</option>
-                      <option>8名</option>
-                    </select>
-                    <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gold/60 font-cin text-[10px]">▼</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-            <div class="mt-10 border-t border-gold/15 pt-8">
-              <div class="flex sm:justify-end">
-                <button type="button" class="reserve-next btn-gold inline-flex w-full min-h-[44px] items-center justify-center gap-2 px-8 py-3.5 text-[13px] tracking-widest2 sm:w-auto" data-reserve-next>次へ</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="reserve-step-pane" data-reserve-step="2">
-            <div class="space-y-4">
-              <span class="mb-1 block font-ja text-[12px] tracking-widest2 text-gold/85">コースのご選択</span>
-              <p class="text-mute text-[11px] tracking-wider leading-relaxed">季節のおまかせコースよりお選びください。</p>
-              <div class="mt-6 space-y-3">
-                <label class="reserve-course-option relative flex cursor-pointer flex-col gap-3 border border-gold/20 bg-ink2/80 p-4 transition-[border-color,background-color,box-shadow] duration-300 hover:border-gold/45 sm:flex-row sm:items-stretch sm:gap-0">
-                  <input type="radio" name="reserveCourse" value="kaoru" class="reserve-radio-input">
-                  <span class="flex flex-1 flex-col gap-1 pr-0 sm:pr-4">
-                    <span class="font-ja text-lg tracking-widest2 text-cream">香 <span class="text-gold/90 text-base">¥12,000</span></span>
-                    <span class="text-[12px] text-cream/60 tracking-wider leading-relaxed">道東の恵みを気軽に愉しむ、入門の一席。</span>
-                  </span>
-                  <span class="reserve-course-ring h-5 w-5 shrink-0 self-end rounded-full border border-gold/35 bg-ink sm:mt-1 sm:self-start"></span>
-                </label>
-                <label class="reserve-course-option relative flex cursor-pointer flex-col gap-3 border border-gold/20 bg-ink2/80 p-4 transition-[border-color,background-color,box-shadow] duration-300 hover:border-gold/45 sm:flex-row sm:items-stretch sm:gap-0">
-                  <input type="radio" name="reserveCourse" value="nao" class="reserve-radio-input" checked>
-                  <span class="flex flex-1 flex-col gap-1 pr-0 sm:pr-4">
-                    <span class="font-ja text-lg tracking-widest2 text-cream">直 <span class="text-gold/90 text-base">¥18,000</span></span>
-                    <span class="text-[12px] text-cream/60 tracking-wider leading-relaxed">店主おまかせの標準コース。旬を余すところなく。</span>
-                  </span>
-                  <span class="reserve-course-ring h-5 w-5 shrink-0 self-end rounded-full border border-gold/35 bg-ink sm:mt-1 sm:self-start"></span>
-                </label>
-                <label class="reserve-course-option relative flex cursor-pointer flex-col gap-3 border border-gold/20 bg-ink2/80 p-4 transition-[border-color,background-color,box-shadow] duration-300 hover:border-gold/45 sm:flex-row sm:items-stretch sm:gap-0">
-                  <input type="radio" name="reserveCourse" value="kiwami" class="reserve-radio-input">
-                  <span class="flex flex-1 flex-col gap-1 pr-0 sm:pr-4">
-                    <span class="font-ja text-lg tracking-widest2 text-cream">極 <span class="text-gold/90 text-base">¥28,000</span></span>
-                    <span class="text-[12px] text-cream/60 tracking-wider leading-relaxed">厳選素材を極める、特別な日のためのコース。</span>
-                  </span>
-                  <span class="reserve-course-ring h-5 w-5 shrink-0 self-end rounded-full border border-gold/35 bg-ink sm:mt-1 sm:self-start"></span>
-                </label>
-              </div>
-            </div>
-            <div class="mt-10 flex flex-col-reverse gap-3 border-t border-gold/15 pt-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3">
-              <button type="button" class="reserve-back btn-outline flex w-full min-h-[44px] items-center justify-center text-[12px] tracking-widest2 px-6 py-3 sm:inline-flex sm:w-auto" data-reserve-back>戻る</button>
-              <button type="button" class="reserve-next btn-gold inline-flex w-full min-h-[44px] items-center justify-center gap-2 px-8 py-3.5 text-[13px] tracking-widest2 sm:w-auto" data-reserve-next>次へ</button>
-            </div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="reserve-step-pane" data-reserve-step="3">
-            <div class="space-y-6">
-              <label class="block">
-                <span class="mb-2 block font-ja text-[12px] tracking-widest2 text-gold/85">お名前</span>
-                <input type="text" id="reserveName" autocomplete="name" placeholder="山田 太郎" class="reserve-field w-full border border-gold/25 bg-ink2 px-4 py-3.5 text-[15px] text-cream placeholder:text-mute/60 outline-none transition-[border-color,box-shadow] focus:border-gold/55 focus:ring-1 focus:ring-gold/30">
-              </label>
-              <label class="block">
-                <span class="mb-2 block font-ja text-[12px] tracking-widest2 text-gold/85">お電話番号</span>
-                <input type="tel" id="reservePhone" autocomplete="tel" placeholder="090-0000-0000" class="reserve-field w-full border border-gold/25 bg-ink2 px-4 py-3.5 text-[15px] text-cream placeholder:text-mute/60 outline-none transition-[border-color,box-shadow] focus:border-gold/55 focus:ring-1 focus:ring-gold/30">
-              </label>
-              <label class="block">
-                <span class="mb-2 block font-ja text-[12px] tracking-widest2 text-gold/85">アレルギー・ご要望等</span>
-                <textarea id="reserveNote" rows="4" placeholder="食材アレルギーや苦手なもの、お祝いのご利用などございましたらご記入ください。" class="reserve-field w-full resize-y border border-gold/25 bg-ink2 px-4 py-3.5 text-[14px] text-cream/90 placeholder:text-mute/55 outline-none transition-[border-color,box-shadow] focus:border-gold/55 focus:ring-1 focus:ring-gold/30 leading-relaxed"></textarea>
-              </label>
-            </div>
-            <div class="mt-10 flex flex-col-reverse gap-3 border-t border-gold/15 pt-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3">
-              <button type="button" class="reserve-back btn-outline flex w-full min-h-[44px] items-center justify-center text-[12px] tracking-widest2 px-6 py-3 sm:inline-flex sm:w-auto" data-reserve-back>戻る</button>
-              <button type="button" id="reserveSubmit" class="btn-gold inline-flex w-full min-h-[44px] items-center justify-center gap-2 px-7 py-3.5 text-[12px] tracking-widest2 sm:w-auto">予約を申し込む</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- STICKY CTA — vertical -->
 <a href="#reserve" id="stickyCta" class="stickycta" aria-label="コースのご予約はこちら">
   <span class="btn-vrl">
@@ -1144,4 +1035,31 @@
 <script defer src="js/main.js"></script>
 <script defer src="js/availability.js"></script>
 <script defer src="js/i18n.js"></script>
+<script>
+// PC では tel: リンクをクリップボードコピーに変換（Windowsのアプリ選択ダイアログを回避）
+(function() {
+  const isMobile = /iPhone|iPad|iPod|Android|webOS/i.test(navigator.userAgent);
+  if (isMobile) return; // スマホはそのまま発信
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="tel:"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        const num = '0154-64-0222';
+        navigator.clipboard.writeText(num).then(function() {
+          // コピー完了トースト
+          const t = document.createElement('div');
+          t.textContent = '📋 電話番号をコピーしました: ' + num;
+          t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1410;border:1px solid rgba(201,168,106,.4);color:#f4ece0;padding:10px 20px;font-size:13px;letter-spacing:.06em;z-index:9999;white-space:nowrap;';
+          document.body.appendChild(t);
+          setTimeout(function() { t.remove(); }, 3000);
+        }).catch(function() {
+          // clipboard APIが使えない場合はアラートで表示
+          alert('お電話番号: ' + num + '\n受付時間 17:00〜22:00');
+        });
+      });
+    });
+  });
+})();
+</script>
 </body></html>

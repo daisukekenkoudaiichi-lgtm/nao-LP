@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "wasyoku-nao",
     "public": "washoku-nao",
     "ignore": [
       "firebase.json",
