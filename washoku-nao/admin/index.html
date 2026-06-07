@@ -582,6 +582,7 @@
   <div class="tab-bar">
     <button class="tab-btn active" id="tab-today" data-tab="today">本日</button>
     <button class="tab-btn"        id="tab-month" data-tab="month">月間</button>
+    <button class="tab-btn"        id="tab-course" data-tab="course">コース</button>
   </div>
 
   <!-- 本日ビュー -->
@@ -619,6 +620,34 @@
     <div class="cal-selected-header" id="cal-selected-header" style="display:none"></div>
     <div class="container" style="padding-top:8px">
       <div id="cal-reservation-list"></div>
+    </div>
+  </div>
+
+  <!-- コース編集ビュー -->
+  <div id="view-course" style="display:none">
+    <div class="container" style="padding-top:20px">
+      <div class="section-title">特別ハーフコース 編集</div>
+
+      <div class="field" style="margin-top:16px">
+        <label>コース名</label>
+        <input id="ce-name" type="text" placeholder="特別ハーフコース">
+      </div>
+      <div class="field">
+        <label>サブタイトル（英語）</label>
+        <input id="ce-type" type="text" placeholder="SPECIAL HALF COURSE">
+      </div>
+      <div class="field">
+        <label>価格（税込・円）</label>
+        <input id="ce-price" type="number" placeholder="6500">
+      </div>
+      <div class="field">
+        <label>品目リスト（1行ずつ入力）</label>
+        <textarea id="ce-items" rows="8" style="width:100%;background:var(--ink3);border:1px solid rgba(201,168,106,.25);color:var(--cream);padding:10px;font-size:14px;line-height:1.8;resize:vertical;"></textarea>
+        <div style="font-size:11px;color:var(--mute);margin-top:6px">例：先付<br>椀物<br>造里（道東鮮魚三種）</div>
+      </div>
+
+      <button class="btn-primary" id="ce-save-btn" style="margin-top:8px">保存する</button>
+      <div id="ce-msg" style="text-align:center;font-size:13px;margin-top:12px;min-height:20px"></div>
     </div>
   </div>
 
@@ -969,8 +998,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.add('active');
 
     const tab = btn.dataset.tab;
-    document.getElementById('view-today').style.display = tab === 'today' ? '' : 'none';
-    document.getElementById('view-month').style.display = tab === 'month' ? '' : 'none';
+    document.getElementById('view-today').style.display  = tab === 'today'  ? '' : 'none';
+    document.getElementById('view-month').style.display  = tab === 'month'  ? '' : 'none';
+    document.getElementById('view-course').style.display = tab === 'course' ? '' : 'none';
 
     if (tab === 'month') {
       if (calYear === null) {
@@ -981,7 +1011,62 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
       }
       loadCalendarMonth();
     }
+
+    if (tab === 'course') loadCourseEditor();
   });
+});
+
+/* ══════════════════════
+   コース編集
+══════════════════════ */
+async function loadCourseEditor() {
+  const msg = document.getElementById('ce-msg');
+  msg.textContent = '読み込み中…';
+  try {
+    const res = await sb.from('course_half').select('name,type,items,price').eq('id', 1).single();
+    if (res.error) throw res.error;
+    const d = res.data;
+    document.getElementById('ce-name').value  = d.name  ?? '';
+    document.getElementById('ce-type').value  = d.type  ?? '';
+    document.getElementById('ce-price').value = d.price ?? '';
+    document.getElementById('ce-items').value = Array.isArray(d.items) ? d.items.join('\n') : '';
+    msg.textContent = '';
+  } catch (e) {
+    msg.style.color = 'var(--red)';
+    msg.textContent = '読み込み失敗: ' + e.message;
+  }
+}
+
+document.getElementById('ce-save-btn').addEventListener('click', async () => {
+  const msg  = document.getElementById('ce-save-btn');
+  const msgEl = document.getElementById('ce-msg');
+  const name  = document.getElementById('ce-name').value.trim();
+  const type  = document.getElementById('ce-type').value.trim();
+  const price = parseInt(document.getElementById('ce-price').value, 10);
+  const items = document.getElementById('ce-items').value
+    .split('\n').map(s => s.trim()).filter(Boolean);
+
+  if (!name || !price || items.length === 0) {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = 'コース名・価格・品目は必須です';
+    return;
+  }
+
+  msgEl.style.color = 'var(--cream)';
+  msgEl.textContent = '保存中…';
+  try {
+    const { error } = await sb.from('course_half').upsert(
+      { id: 1, name, type, items, price, updated_at: new Date().toISOString() },
+      { onConflict: 'id' }
+    );
+    if (error) throw error;
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = '✓ 保存しました';
+    setTimeout(() => { msgEl.textContent = ''; }, 3000);
+  } catch (e) {
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = '保存失敗: ' + e.message;
+  }
 });
 
 /* ══════════════════════

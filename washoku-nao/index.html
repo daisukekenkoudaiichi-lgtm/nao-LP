@@ -278,16 +278,16 @@
       </header>
 
       <div class="grid md:grid-cols-3 gap-6 md:gap-8 stagger">
-        <!-- COURSE 1 -->
-        <article class="relative bg-ink2 border border-gold/15 p-6 sm:p-8 md:p-10 flex flex-col">
+        <!-- COURSE 1 (Supabase course_half テーブルで動的更新) -->
+        <article id="course-half-card" class="relative bg-ink2 border border-gold/15 p-6 sm:p-8 md:p-10 flex flex-col">
           <div class="flex items-center justify-between">
             <div class="num-circle text-gold/80 text-[12px] tracking-widest2">Ⅰ · HALF</div>
             <div class="text-mute text-[10px] tracking-widest2 font-cin">SPECIAL COURSE</div>
           </div>
-          <h3 class="font-ja text-3xl mt-6 gold-foil" data-i18n="course_1_name">特別ハーフコース</h3>
-          <div class="mt-3 text-cream/70 text-[12px] tracking-widest2 font-cin" data-i18n="course_1_type">SPECIAL HALF COURSE</div>
+          <h3 id="ch-name" class="font-ja text-3xl mt-6 gold-foil" data-i18n="course_1_name">特別ハーフコース</h3>
+          <div id="ch-type" class="mt-3 text-cream/70 text-[12px] tracking-widest2 font-cin" data-i18n="course_1_type">SPECIAL HALF COURSE</div>
           <div class="hairline h-px w-12 mt-6"></div>
-          <ul class="mt-6 text-cream/80 text-[13px] leading-[2] tracking-wider space-y-1">
+          <ul id="ch-items" class="mt-6 text-cream/80 text-[13px] leading-[2] tracking-wider space-y-1">
             <li data-i18n="course_1_i1">— 先付</li>
             <li data-i18n="course_1_i2">— 椀物</li>
             <li data-i18n="course_1_i3">— 造里（道東鮮魚三種）</li>
@@ -297,7 +297,7 @@
           </ul>
           <div class="mt-auto flex items-baseline justify-between border-t border-gold/15 pt-5">
             <div class="text-gold/90 text-[11px] tracking-widest2 font-cin">FROM</div>
-            <div class="font-ja text-2xl">¥ 6,500<span class="text-[12px] text-mute ml-1">／ 税込</span></div>
+            <div class="font-ja text-2xl">¥ <span id="ch-price">6,500</span><span class="text-[12px] text-mute ml-1">／ 税込</span></div>
           </div>
         </article>
 
@@ -1033,6 +1033,44 @@
 <script defer src="js/main.js"></script>
 <script defer src="js/availability.js"></script>
 <script defer src="js/i18n.js"></script>
+
+<!-- コース1 動的更新 -->
+<script>
+(function() {
+  const SUPABASE_URL  = 'https://johrztiitxndabamqwgi.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvaHJ6dGlpdHhuZGFiYW1xd2dpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NzUwNTksImV4cCI6MjA5NTU1MTA1OX0.baPOfNCMfLvXDl17IleOHvB4EdvwQfBnjy0KQUUPHG0';
+
+  async function loadCourseHalf() {
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/course_half?id=eq.1&select=name,type,items,price`,
+        { headers: { apikey: SUPABASE_ANON, Accept: 'application/json' } }
+      );
+      if (!res.ok) return;
+      const [data] = await res.json();
+      if (!data) return;
+
+      const nameEl  = document.getElementById('ch-name');
+      const typeEl  = document.getElementById('ch-type');
+      const itemsEl = document.getElementById('ch-items');
+      const priceEl = document.getElementById('ch-price');
+
+      if (nameEl)  nameEl.textContent  = data.name;
+      if (typeEl)  typeEl.textContent  = data.type;
+      if (priceEl) priceEl.textContent = Number(data.price).toLocaleString('ja-JP');
+      if (itemsEl && Array.isArray(data.items)) {
+        itemsEl.innerHTML = data.items
+          .map(item => `<li>— ${item}</li>`)
+          .join('');
+      }
+    } catch (e) {
+      // フォールバック: 読み込み失敗時はハードコード内容をそのまま表示
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadCourseHalf);
+})();
+</script>
 <script>
 // PC では tel: リンクをクリップボードコピーに変換（Windowsのアプリ選択ダイアログを回避）
 (function() {
