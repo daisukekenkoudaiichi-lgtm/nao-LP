@@ -28,9 +28,8 @@
 <!-- LOADER -->
 <div id="loader">
   <div class="flex flex-col items-center gap-7">
-    <div class="seal">直</div>
+    <img src="assets/images/logo.png" class="loader-logo" alt="和食 直 NAO" draggable="false">
     <div class="loader-line"></div>
-    <div class="font-cin tracking-widest2 text-[10px] text-gold/70">WASHOKU NAO</div>
   </div>
 </div>
 
@@ -91,6 +90,10 @@
       </picture>
       <div class="absolute inset-x-0 top-0 h-20 vignette-top pointer-events-none"></div>
       <div class="absolute inset-x-0 bottom-0 h-16 vignette-bottom pointer-events-none"></div>
+      <!-- ロゴオーバーレイ -->
+      <div class="hero-logo-overlay absolute z-10 pointer-events-none">
+        <img src="assets/images/logo.png" alt="和食 直 NAO" class="hero-logo-img" draggable="false">
+      </div>
     </div>
 
     <!-- アクセシビリティ用見出し（非表示） -->

@@ -428,6 +428,28 @@
   }
   .loader-line { width: 0; height: 1px; background: linear-gradient(90deg, transparent, #c9a86a, transparent); transition: width 2s cubic-bezier(.2,.7,.2,1); }
   #loader.go .loader-line { width: 180px; }
+  .loader-logo { width: 130px; height: auto; filter: drop-shadow(0 0 18px rgba(200,168,50,.5)); }
+
+  /* hero logo overlay */
+  .hero-logo-overlay {
+    top: 6%;
+    left: 4%;
+  }
+  .hero-logo-img {
+    width: 100px;
+    height: auto;
+    filter: drop-shadow(0 2px 16px rgba(0,0,0,.7));
+  }
+  @media (min-width: 768px) {
+    .hero-logo-overlay {
+      top: 7%;
+      left: 5%;
+    }
+    .hero-logo-img { width: 150px; }
+  }
+  @media (min-width: 1280px) {
+    .hero-logo-img { width: 180px; }
+  }
 
   /* sticky nav */
   .nav-wrap { transition: background .5s ease, backdrop-filter .5s ease, border-color .5s ease; border-bottom:1px solid transparent; }
