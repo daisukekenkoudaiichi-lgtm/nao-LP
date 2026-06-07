@@ -412,7 +412,7 @@
 
   /* loader */
   #loader {
-    position: fixed; inset:0; background:#0a0807; z-index: 200;
+    position: fixed; inset:0; background:#0a0807; z-index: 9999;
     display:flex; align-items:center; justify-content:center;
     transition: opacity 1.2s ease, visibility 1.2s ease;
   }
@@ -430,25 +430,27 @@
   #loader.go .loader-line { width: 180px; }
   .loader-logo { width: 130px; height: auto; filter: drop-shadow(0 0 18px rgba(200,168,50,.5)); }
 
-  /* hero logo overlay */
-  .hero-logo-overlay {
-    top: 6%;
-    left: 4%;
-  }
-  .hero-logo-img {
-    width: 100px;
-    height: auto;
-    filter: drop-shadow(0 2px 16px rgba(0,0,0,.7));
-  }
+  /* hero logo overlay — モバイルでは非表示 */
+  .hero-logo-overlay { display: none; }
+
   @media (min-width: 768px) {
     .hero-logo-overlay {
-      top: 7%;
-      left: 5%;
+      display: block;
+      top: 2%;
+      left: 13%;
     }
-    .hero-logo-img { width: 150px; }
+    .hero-logo-img {
+      width: 90px;
+      height: auto;
+      filter: drop-shadow(0 2px 20px rgba(0,0,0,.8));
+    }
   }
   @media (min-width: 1280px) {
-    .hero-logo-img { width: 180px; }
+    .hero-logo-overlay {
+      top: 2.5%;
+      left: 13%;
+    }
+    .hero-logo-img { width: 110px; }
   }
 
   /* sticky nav */
