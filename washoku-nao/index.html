@@ -150,16 +150,18 @@
 
         <!-- SEA -->
         <article class="group relative">
-          <!-- 写真プレースホルダー: assets/images/ に料理写真を追加して src を指定してください -->
-          <div class="relative aspect-[4/5] overflow-hidden border border-gold/20">
-            <div class="absolute inset-0 bg-[#0d0b09] flex flex-col items-center justify-center gap-4">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#4a3e2a" stroke-width="1.2">
-                <rect x="4" y="8" width="32" height="24" rx="1"/>
-                <circle cx="20" cy="20" r="6"/>
-                <circle cx="30" cy="12" r="2" fill="#4a3e2a" stroke="none"/>
-              </svg>
-              <div class="font-cin text-[10px] tracking-widest2 text-gold/30">01 — SEA</div>
-              <div class="font-ja text-[11px] text-gold/25 tracking-wider">料理写真を追加</div>
+          <div class="relative aspect-[4/5] overflow-hidden border border-gold/20" id="sea-carousel">
+            <img src="assets/images/sea-sashimi.jpg" alt="刺身盛り" class="sea-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-100">
+            <img src="assets/images/sea-crab-claw.jpg" alt="蟹爪" class="sea-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0">
+            <img src="assets/images/sea-kegani.jpg" alt="毛蟹" class="sea-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0">
+            <img src="assets/images/sea-kegani-meat.jpg" alt="毛蟹ほぐし身" class="sea-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0">
+            <img src="assets/images/sea-shirako.jpg" alt="白子" class="sea-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-700 opacity-0">
+            <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
+              <button class="sea-dot w-1.5 h-1.5 rounded-full transition-all duration-300 bg-gold/90" data-idx="0"></button>
+              <button class="sea-dot w-1.5 h-1.5 rounded-full transition-all duration-300 bg-gold/30" data-idx="1"></button>
+              <button class="sea-dot w-1.5 h-1.5 rounded-full transition-all duration-300 bg-gold/30" data-idx="2"></button>
+              <button class="sea-dot w-1.5 h-1.5 rounded-full transition-all duration-300 bg-gold/30" data-idx="3"></button>
+              <button class="sea-dot w-1.5 h-1.5 rounded-full transition-all duration-300 bg-gold/30" data-idx="4"></button>
             </div>
             <div class="corner corner-tl"></div>
             <div class="corner corner-tr"></div>
@@ -185,18 +187,9 @@
         </article>
 
         <!-- MOUNTAIN -->
-        <article class="group relative md:translate-y-10">
-          <!-- 写真プレースホルダー -->
+        <article class="group relative">
           <div class="relative aspect-[4/5] overflow-hidden border border-gold/20">
-            <div class="absolute inset-0 bg-[#0d0b09] flex flex-col items-center justify-center gap-4">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#4a3e2a" stroke-width="1.2">
-                <rect x="4" y="8" width="32" height="24" rx="1"/>
-                <circle cx="20" cy="20" r="6"/>
-                <circle cx="30" cy="12" r="2" fill="#4a3e2a" stroke="none"/>
-              </svg>
-              <div class="font-cin text-[10px] tracking-widest2 text-gold/30">02 — MOUNTAIN</div>
-              <div class="font-ja text-[11px] text-gold/25 tracking-wider">料理写真を追加</div>
-            </div>
+            <img src="assets/images/mountain-matsutake.jpg" alt="松茸と土鍋ご飯" class="w-full h-full object-cover object-center">
             <div class="corner corner-tl"></div>
             <div class="corner corner-tr"></div>
             <div class="corner corner-bl"></div>
@@ -221,17 +214,8 @@
 
         <!-- LAND -->
         <article class="group relative">
-          <!-- 写真プレースホルダー -->
           <div class="relative aspect-[4/5] overflow-hidden border border-gold/20">
-            <div class="absolute inset-0 bg-[#0d0b09] flex flex-col items-center justify-center gap-4">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#4a3e2a" stroke-width="1.2">
-                <rect x="4" y="8" width="32" height="24" rx="1"/>
-                <circle cx="20" cy="20" r="6"/>
-                <circle cx="30" cy="12" r="2" fill="#4a3e2a" stroke="none"/>
-              </svg>
-              <div class="font-cin text-[10px] tracking-widest2 text-gold/30">03 — LAND</div>
-              <div class="font-ja text-[11px] text-gold/25 tracking-wider">料理写真を追加</div>
-            </div>
+            <img src="assets/images/land-wagyu.jpg" alt="霜降り和牛" class="w-full h-full object-cover object-center">
             <div class="corner corner-tl"></div>
             <div class="corner corner-tr"></div>
             <div class="corner corner-bl"></div>
@@ -366,35 +350,29 @@
       <!-- Asymmetric grid -->
       <div class="grid grid-cols-12 gap-3 md:gap-6">
         <div class="col-span-12 md:col-span-7 img-zoom relative aspect-[16/11] overflow-hidden reveal reveal-l">
-          <img src="assets/images/crab-counter.jpg" alt="カウンターに並ぶ毛蟹と日本酒" class="w-full h-full object-cover object-[center_55%]">
+          <img src="assets/images/space-counter-1.jpg" alt="カウンター席（温かな灯り）" class="w-full h-full object-cover object-center">
           <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent"></div>
           <div class="absolute left-6 bottom-6">
-            <div class="font-cin text-[10px] tracking-widest2 text-gold">01 / ENTRANCE</div>
+            <div class="font-cin text-[10px] tracking-widest2 text-gold">01 / COUNTER</div>
             <div class="font-ja text-xl mt-2" data-i18n="space_01_label">迎えの暖簾</div>
           </div>
         </div>
 
         <div class="col-span-12 md:col-span-5 flex flex-col gap-3 md:gap-6">
-          <div class="img-zoom relative aspect-[4/3] overflow-hidden bg-ink3 reveal reveal-r">
-            <!-- placeholder counter scene composed from CSS as we lack real image -->
-            <div class="absolute inset-0" style="background:
-              radial-gradient(120% 80% at 30% 60%, rgba(201,168,106,0.18), transparent 55%),
-              radial-gradient(60% 60% at 80% 30%, rgba(201,168,106,0.10), transparent 60%),
-              linear-gradient(180deg,#1a1310 0%, #0c0a09 100%);"></div>
-            <!-- counter line -->
-            <div class="absolute left-0 right-0 bottom-[28%] h-[2px]" style="background: linear-gradient(90deg, transparent, #6a5836, #c9a86a, #6a5836, transparent);"></div>
-            <div class="absolute left-0 right-0 bottom-[27%] h-[40%]" style="background: linear-gradient(180deg, rgba(40,28,18,0.7), rgba(10,8,7,0.95));"></div>
-            <!-- pendant lights -->
-            <div class="absolute left-1/4 top-6 w-[2px] h-12 bg-gold/40"></div>
-            <div class="absolute left-1/4 top-[60px] w-3 h-3 rounded-full" style="background: radial-gradient(circle,#f6e3b0,#c9a86a 60%,transparent 70%); filter: blur(.4px);"></div>
-            <div class="absolute left-1/2 top-6 w-[2px] h-16 bg-gold/40"></div>
-            <div class="absolute left-1/2 top-[68px] w-3 h-3 rounded-full" style="background: radial-gradient(circle,#f6e3b0,#c9a86a 60%,transparent 70%); filter: blur(.4px);"></div>
-            <div class="absolute left-3/4 top-6 w-[2px] h-10 bg-gold/40"></div>
-            <div class="absolute left-3/4 top-[52px] w-3 h-3 rounded-full" style="background: radial-gradient(circle,#f6e3b0,#c9a86a 60%,transparent 70%); filter: blur(.4px);"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent"></div>
+          <div class="img-zoom relative aspect-[4/3] overflow-hidden reveal reveal-r">
+            <img src="assets/images/space-counter-2.jpg" alt="カウンター全景" class="w-full h-full object-cover object-center">
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent"></div>
             <div class="absolute left-6 bottom-6">
               <div class="font-cin text-[10px] tracking-widest2 text-gold">02 / COUNTER</div>
               <div class="font-ja text-xl mt-2" data-i18n="space_02_label">八席のカウンター</div>
+            </div>
+          </div>
+          <div class="img-zoom relative aspect-[4/3] overflow-hidden reveal reveal-r">
+            <img src="assets/images/space-counter-3.jpg" alt="カウンター奥まで" class="w-full h-full object-cover object-center">
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent"></div>
+            <div class="absolute left-6 bottom-6">
+              <div class="font-cin text-[10px] tracking-widest2 text-gold">03 / VIEW</div>
+              <div class="font-ja text-xl mt-2">板前の手元</div>
             </div>
           </div>
         </div>
@@ -1096,6 +1074,23 @@
       });
     });
   });
+})();
+
+// SEA carousel
+(function(){
+  var slides = document.querySelectorAll('.sea-slide');
+  var dots = document.querySelectorAll('.sea-dot');
+  if(!slides.length) return;
+  var cur = 0;
+  function go(n){
+    slides[cur].style.opacity = '0';
+    dots[cur].style.opacity = '0.3';
+    cur = ((n % slides.length) + slides.length) % slides.length;
+    slides[cur].style.opacity = '1';
+    dots[cur].style.opacity = '1';
+  }
+  dots.forEach(function(d){ d.addEventListener('click', function(){ go(+d.dataset.idx); }); });
+  setInterval(function(){ go(cur + 1); }, 4500);
 })();
 </script>
 </body></html>
